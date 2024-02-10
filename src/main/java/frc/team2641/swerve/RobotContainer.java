@@ -45,14 +45,13 @@ public class RobotContainer
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
     Command driveFieldOrientedDirectAngle = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
-        () -> driverXbox.getRightY());
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverXbox.getRightX());
 
     Command driveFieldOrientedDirectAngleSim = drivetrain.simDriveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverXbox.getRawAxis(2));
 
     drivetrain.setDefaultCommand(
@@ -68,7 +67,6 @@ public class RobotContainer
    */
   private void configureBindings() {
     new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivetrain::zeroGyro)));
-    new JoystickButton(driverXbox, 3).onTrue(new InstantCommand(drivetrain::addFakeVisionReading));
     new JoystickButton(driverXbox, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
   }
