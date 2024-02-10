@@ -3,24 +3,29 @@ package frc.team2641.swerve.commands.auto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team2641.swerve.Limelight;
 import frc.team2641.swerve.subsystems.Drivetrain;
-
 
 /**
  * Auto Balance command using a simple PID controller. Created by Team 3512
  * <a href="https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java">...</a>
  */
-public class AutoBalanceCommand extends Command {
+public class LimelightTracking extends Command {
   private final Drivetrain swerveSubsystem;
-  private final PIDController controller;
+  private final PIDController   controllerX;
+  private final PIDController   controllerY;
 
-  public AutoBalanceCommand() {
+
+  public LimelightTracking() {
     this.swerveSubsystem = Drivetrain.getInstance();
-    controller = new PIDController(1.0, 0.0, 0.0);
-    controller.setTolerance(1);
-    controller.setSetpoint(0.0);
+    controllerX = new PIDController(0.5, 0.0, 0.0);
+    controllerX.setTolerance(0.25);
+    controllerX.setSetpoint(0.0);
+    
+    controllerY = new PIDController(1.0, 0.0, 0.0);
+    controllerY.setTolerance(0.25);
+    controllerY.setSetpoint(0.0);
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
     addRequirements(this.swerveSubsystem);
@@ -31,6 +36,7 @@ public class AutoBalanceCommand extends Command {
    */
   @Override
   public void initialize() {
+
   }
 
   /**
@@ -39,9 +45,15 @@ public class AutoBalanceCommand extends Command {
    */
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("At Tolerance", controller.atSetpoint());
-    double translationVal = MathUtil.clamp(controller.calculate(swerveSubsystem.getPitch().getDegrees(), 0.0), -0.5, 0.5);
-    swerveSubsystem.drive(new Translation2d(translationVal, 0.0), 0.0, true);
+    double tx = Limelight.getTX("");
+    double ty = Limelight.getTY("");
+
+    double translationY = MathUtil.clamp(controllerY.calculate(ty, 0.0), -0.5,
+                                           0.5);
+    double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -0.5,
+                                           0.5);
+
+    swerveSubsystem.drive(new Translation2d(-translationY, -translationX), 0.0, true);
   }
 
   /**
@@ -59,7 +71,7 @@ public class AutoBalanceCommand extends Command {
    */
   @Override
   public boolean isFinished() {
-    return controller.atSetpoint();
+    return controllerX.atSetpoint() && controllerY.atSetpoint();
   }
 
   /**

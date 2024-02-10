@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
+import frc.team2641.swerve.commands.auto.LimelightTracking;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -78,7 +79,8 @@ public class RobotContainer
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drivetrain.getAutonomousCommand("New Auto");
+    // return drivetrain.getAutonomousCommand("New Auto");
+    return new LimelightTracking();
   }
 
   public void setDriveMode() {
