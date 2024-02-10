@@ -7,8 +7,10 @@ package frc.team2641.swerve;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2641.swerve.commands.ToggleDriveMode;
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
@@ -18,13 +20,11 @@ import swervelib.parser.SwerveParser;
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
  * project, you must also update the build.gradle file in the project.
  */
-public class Robot extends TimedRobot
-{
-
+public class Robot extends TimedRobot {
   private static Robot instance;
   private Command autoCommand;
 
-  private RobotContainer robotContainer;
+  public RobotContainer robotContainer;
 
   private Timer disabledTimer;
 
@@ -48,6 +48,9 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+
+    // Toggle button for switching between gamepad and joystick control for driver tryouts
+    SmartDashboard.putData("Toggle Drive Mode", new ToggleDriveMode());
   }
 
   /**
@@ -78,8 +81,7 @@ public class Robot extends TimedRobot
 
   @Override
   public void disabledPeriodic() {
-    if (disabledTimer.hasElapsed(Constants.DriveConstants.WHEEL_LOCK_TIME))
-    {
+    if (disabledTimer.hasElapsed(Constants.DriveConstants.WHEEL_LOCK_TIME)) {
       robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
@@ -117,7 +119,6 @@ public class Robot extends TimedRobot
     {
       autoCommand.cancel();
     }
-    robotContainer.setDriveMode();
     robotContainer.setMotorBrake(true);
   }
 

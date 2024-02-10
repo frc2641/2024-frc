@@ -8,8 +8,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.BooleanSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,36 +31,49 @@ import frc.team2641.swerve.commands.auto.LimelightTracking;
  * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
  * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer
-{
+public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  XboxController driverXbox = new XboxController(0);
+
+  XboxController driverGamepad = new XboxController(0);
+  Joystick driverJoystick = new Joystick(1);
+
+  Command driveGamepad;
+  Command driveJoystick;
+  Command driveSim;
+
+  BooleanSubscriber sub;
+  BooleanPublisher pub;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer()
-  {
+  public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX());
+    // Applies deadbands and inverts controls because joysticks are back-right positive, while robot controls are front-left
+    // positive. The left stick controls translation and the right stick controls the desired angle, NOT angular rotation.
+    driveGamepad = drivetrain.driveCommand(
+        () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverGamepad.getRightX());
 
-    Command driveFieldOrientedDirectAngleSim = drivetrain.simDriveCommand(
-        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRawAxis(2));
+    driveJoystick = drivetrain.driveCommand(
+        () -> MathUtil.applyDeadband(-driverJoystick.getY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverJoystick.getX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverJoystick.getTwist());
 
-    drivetrain.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+    driveSim = drivetrain.simDriveCommand(
+        () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverGamepad.getRawAxis(2));
+
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+    pub = table.getBooleanTopic("driveMode").publish();
+    pub.set(false);
+    sub = table.getBooleanTopic("driveMode").subscribe(false);
+
+    drivetrain.setDefaultCommand(!RobotBase.isSimulation() ? driveGamepad : driveSim);
   }
 
   /**
@@ -66,9 +84,9 @@ public class RobotContainer
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivetrain::zeroGyro)));
-    new JoystickButton(driverXbox, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
-    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
+    new JoystickButton(driverGamepad, 1).onTrue((new InstantCommand(drivetrain::zeroGyro)));
+    new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
+    new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
   }
 
   /**
@@ -81,10 +99,31 @@ public class RobotContainer
     return new LimelightTracking();
   }
 
-  public void setDriveMode() {
-    //drivetrain.setDefaultCommand();
+  /**
+   * Toggles between gamepad and joystick control for driver tryouts
+   */
+  public void toggleDriveMode() {
+    boolean driveMode = !getDriveMode();
+    pub.set(driveMode);
+
+    if (driveMode) drivetrain.setDefaultCommand(driveGamepad);
+    else drivetrain.setDefaultCommand(driveJoystick);
   }
 
+  /**
+   * Gets whether robot is controlled by gamepad or joystick
+   * 
+   * @return true if controlled by joystick, false if controlled by gamepad
+   */
+  public boolean getDriveMode() {
+    return sub.get();
+  }
+
+  /**
+   * Sets the brake mode of the drivetrain motors
+   * 
+   * @param brake true to enable brake mode, false to disable brake mode
+   */
   public void setMotorBrake(boolean brake) {
     drivetrain.setMotorBrake(brake);
   }
