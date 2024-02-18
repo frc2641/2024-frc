@@ -7,18 +7,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.swerve.Limelight;
 import frc.team2641.swerve.subsystems.Drivetrain;
 
-/**
- * Auto Balance command using a simple PID controller. Created by Team 3512
- * <a href="https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java">...</a>
- */
 public class LimelightTracking extends Command {
   private final Drivetrain swerveSubsystem;
-  private final PIDController   controllerX;
-  private final PIDController   controllerY;
-
+  
+  private final PIDController controllerX;
+  private final PIDController controllerY;
+  private final PIDController controllerAngle;
 
   public LimelightTracking() {
     this.swerveSubsystem = Drivetrain.getInstance();
+    
     controllerX = new PIDController(0.5, 0.0, 0.0);
     controllerX.setTolerance(0.25);
     controllerX.setSetpoint(0.0);
@@ -26,6 +24,11 @@ public class LimelightTracking extends Command {
     controllerY = new PIDController(1.0, 0.0, 0.0);
     controllerY.setTolerance(0.25);
     controllerY.setSetpoint(0.0);
+
+    controllerAngle = new PIDController(1.0, 0.0, 0.0);
+    controllerAngle.setTolerance(0.25);
+    controllerAngle.setSetpoint(0.0);
+
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
     addRequirements(this.swerveSubsystem);
@@ -35,9 +38,7 @@ public class LimelightTracking extends Command {
    * The initial subroutine of a command.  Called once when the command is initially scheduled.
    */
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   /**
    * The main body of a command.  Called repeatedly while the command is scheduled. (That is, it is called repeatedly
@@ -47,13 +48,13 @@ public class LimelightTracking extends Command {
   public void execute() {
     double tx = Limelight.getTX("");
     double ty = Limelight.getTY("");
+    double tangle = Limelight.getBotPose3d_TargetSpace("").getRotation().getZ();
 
-    double translationY = MathUtil.clamp(controllerY.calculate(ty, 0.0), -0.5,
-                                           0.5);
-    double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -0.5,
-                                           0.5);
+    double translationY = MathUtil.clamp(controllerY.calculate(ty, 0.0), -0.5, 0.5);
+    double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -0.5, 0.5);
+    double rotation = MathUtil.clamp(controllerAngle.calculate(tangle, 0.0), -0.5, 0.5);
 
-    swerveSubsystem.drive(new Translation2d(-translationY, -translationX), 0.0, true);
+    swerveSubsystem.drive(new Translation2d(-translationY, -translationX), rotation, true);
   }
 
   /**
@@ -71,7 +72,7 @@ public class LimelightTracking extends Command {
    */
   @Override
   public boolean isFinished() {
-    return controllerX.atSetpoint() && controllerY.atSetpoint();
+    return controllerX.atSetpoint() && controllerY.atSetpoint() && controllerAngle.atSetpoint();
   }
 
   /**

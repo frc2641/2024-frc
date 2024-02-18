@@ -93,16 +93,16 @@ public class Drivetrain extends SubsystemBase {
       this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                                      AutoConstants.TRANSLATION_PID,
-                                      // Translation PID constants
-                                      AutoConstants.ANGLE_PID,
-                                      // Rotation PID constants
-                                      4.5,
-                                      // Max module speed, in m/s
-                                      swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
-                                      // Drive base radius in meters. Distance from robot center to furthest module.
-                                      new ReplanningConfig()
-                                      // Default path replanning config. See the API for the options here
+                                       AutoConstants.TRANSLATION_PID,
+                                       // Translation PID constants
+                                       AutoConstants.ANGLE_PID,
+                                       // Rotation PID constants
+                                       4.5,
+                                       // Max module speed, in m/s
+                                       swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
+                                       // Drive base radius in meters. Distance from robot center to furthest module.
+                                       new ReplanningConfig()
+                                       // Default path replanning config. See the API for the options here
       ),
       () -> {
         // Boolean supplier that controls when the path will be mirrored for the red alliance

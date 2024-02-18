@@ -22,6 +22,7 @@ public final class Constants {
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; //s, 20ms + 110ms sprk max velocity lag
+  public static final double CLIMBER_STOP = 2048*5;
 
   public static final class AutoConstants {
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
@@ -37,5 +38,19 @@ public final class Constants {
     public static final double LEFT_Y_DEADBAND  = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
+  }
+
+  public static final class Motors {
+    public static final int topShooterMotor = 14;
+    public static final int bottomShooterMotor = 13;
+    public static final int climberMotor = 15;
+  }
+
+  public static final class MotorSpeeds {
+    public static final double speakerSpeed = 1;
+    public static final double ampSpeed = 0.2;
+    public static final double trapSpeed = 1;
+    public static final double intakeSpeed = 0.35;
+    public static final double climbSpeed = 0.35;
   }
 }

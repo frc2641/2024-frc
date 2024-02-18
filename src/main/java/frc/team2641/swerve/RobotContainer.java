@@ -5,9 +5,6 @@
 package frc.team2641.swerve;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -16,14 +13,14 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
+import frc.team2641.swerve.commands.FireCommand;
+import frc.team2641.swerve.commands.ClimbCommand;
 import frc.team2641.swerve.commands.auto.LimelightTracking;
 
 /**
@@ -84,9 +81,15 @@ public class RobotContainer {
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverGamepad, 1).onTrue((new InstantCommand(drivetrain::zeroGyro)));
-    new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
-    new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
+    // new JoystickButton(driverGamepad, 1).onTrue((new InstantCommand(drivetrain::zeroGyro)));
+    // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
+    // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
+    new JoystickButton(driverGamepad, 3).whileTrue(new FireCommand(4));
+    new JoystickButton(driverGamepad, 4).whileTrue(new FireCommand(1));
+    new JoystickButton(driverGamepad, 5).whileTrue(new FireCommand(3));
+    new JoystickButton(driverGamepad, 6).whileTrue(new FireCommand(2));
+    new POVButton(driverGamepad, 0).onTrue(new ClimbCommand(2));
+    new POVButton(driverGamepad, 180).onTrue(new ClimbCommand(1));
   }
 
   /**
@@ -95,8 +98,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return drivetrain.getAutonomousCommand("New Auto");
-    return new LimelightTracking();
+    return drivetrain.getAutonomousCommand("New Auto");
+    // return new LimelightTracking();
   }
 
   /**

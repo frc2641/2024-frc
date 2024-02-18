@@ -777,4 +777,7 @@ public class Limelight {
 
         return results;
     }
+
+    public class getBotPose3D {
+    }
 }
