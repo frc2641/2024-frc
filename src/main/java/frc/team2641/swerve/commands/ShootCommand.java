@@ -3,11 +3,11 @@ package frc.team2641.swerve.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.swerve.subsystems.Shooter;
 
-public class FireCommand extends Command {
+public class ShootCommand extends Command {
   private Shooter shooter;
   private int speed;
 
-  public FireCommand(int speed) {
+  public ShootCommand(int speed) {
     this.shooter = Shooter.getInstance();
     this.speed = speed;
 
