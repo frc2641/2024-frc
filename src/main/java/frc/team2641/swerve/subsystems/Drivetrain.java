@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.team2641.swerve.Constants.AutoConstants;
+import frc.team2641.swerve.Constants.DriveConstants;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
@@ -50,10 +51,6 @@ public class Drivetrain extends SubsystemBase {
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
-  /**
-   * Maximum speed of the robot in meters per second, used to limit acceleration.
-   */
-  public double maximumSpeed = Units.feetToMeters(14.5);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -62,9 +59,9 @@ public class Drivetrain extends SubsystemBase {
    */
   private Drivetrain() {
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
-      swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(maximumSpeed);
+      swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(DriveConstants.MAX_SPEED);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -80,7 +77,7 @@ public class Drivetrain extends SubsystemBase {
    * @param controllerCfg Swerve Controller.
    */
   private Drivetrain(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
+    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, DriveConstants.MAX_SPEED);
   }
 
   /**
@@ -390,7 +387,7 @@ public class Drivetrain extends SubsystemBase {
                                                         headingX,
                                                         headingY,
                                                         getHeading().getRadians(),
-                                                        maximumSpeed);
+                                                        DriveConstants.MAX_SPEED);
   }
 
   /**
@@ -409,7 +406,7 @@ public class Drivetrain extends SubsystemBase {
                                                         yInput,
                                                         angle.getRadians(),
                                                         getHeading().getRadians(),
-                                                        maximumSpeed);
+                                                        DriveConstants.MAX_SPEED);
   }
 
   /**
