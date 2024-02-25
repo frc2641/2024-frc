@@ -6,40 +6,22 @@ import frc.team2641.swerve.subsystems.Climber;
 
 public class ClimbCommand extends Command {
   private Climber climber;
-  private int direction;
 
-  public ClimbCommand(int direction) {
+  public ClimbCommand() {
     this.climber = Climber.getInstance();
-    this.direction = direction;
     addRequirements(climber);
   }
 
   @Override
-  public void initialize() {}
-
-  @Override
-  public void execute() {
-    if (direction == 1) {
-      // if (climber.getPosition() < Constants.CLIMBER_STOP) {
-        climber.down();
-      // }
-      // else {
-        // climber.stop();
-      // }
-    } else if (direction == 2) {
-      // if (climber.getPosition() > 0) {
-        climber.up();
-      // }
-      // else {
-        // climber.stop();
-      // }
-    }
+  public void initialize() {
+    climber.toggle();
   }
 
   @Override
-  public void end(boolean interrupted) {
-    climber.stop();
-  }
+  public void execute() {}
+
+  @Override
+  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {

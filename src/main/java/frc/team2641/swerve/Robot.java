@@ -5,15 +5,20 @@
 package frc.team2641.swerve;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2641.swerve.commands.ToggleDriveMode;
+import frc.team2641.swerve.subsystems.Pneumatics;
+
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -24,6 +29,10 @@ public class Robot extends TimedRobot {
   private static Robot instance;
   private Command autoCommand;
 
+  private static Pneumatics pneumatics;
+
+  private static PowerDistribution pdh;
+  private static PneumaticHub ph;
   public RobotContainer robotContainer;
 
   private Timer disabledTimer;
@@ -41,6 +50,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    pdh = new PowerDistribution(Constants.CAN.pdh, PowerDistribution.ModuleType.kRev);
+    ph = new PneumaticHub(Constants.CAN.ph);
+
+    pneumatics = Pneumatics.getInstance();
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
@@ -77,6 +91,7 @@ public class Robot extends TimedRobot {
     robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
+    pneumatics.disable();
   }
 
   @Override
@@ -94,12 +109,13 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     robotContainer.setMotorBrake(true);
     autoCommand = robotContainer.getAutonomousCommand();
-
     // schedule the autonomous command (example)
     if (autoCommand != null)
     {
       autoCommand.schedule();
     }
+
+    pneumatics.enable();
   }
 
   /**
@@ -120,6 +136,8 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     robotContainer.setMotorBrake(true);
+
+    pneumatics.enable();
   }
 
   /**
@@ -161,5 +179,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void simulationPeriodic() {
+  }
+
+  public static PneumaticHub getPH() {
+    return ph;
+  }
+
+  public static PowerDistribution getPDH() {
+    return pdh;
   }
 }

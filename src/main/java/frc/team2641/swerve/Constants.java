@@ -41,11 +41,13 @@ public final class Constants {
     public static final double TURN_CONSTANT    = 6;
   }
 
-  public static final class Motors {
+  public static final class CAN {
     public static final int topShooterMotor = 14;
     public static final int bottomShooterMotor = 13;
     public static final int leftClimberMotor = 15;
     public static final int rightClimberMotor = 16;
+    public static final int pdh = 20;
+    public static final int ph = 21;
   }
 
   public static final class MotorSpeeds {

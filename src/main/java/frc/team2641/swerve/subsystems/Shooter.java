@@ -18,8 +18,8 @@ public class Shooter extends SubsystemBase {
   public TalonFX topShooterMotor, bottomShooterMotor;
 
   public Shooter() {
-    topShooterMotor = new TalonFX(Constants.Motors.topShooterMotor);
-    bottomShooterMotor = new TalonFX(Constants.Motors.bottomShooterMotor);
+    topShooterMotor = new TalonFX(Constants.CAN.topShooterMotor);
+    bottomShooterMotor = new TalonFX(Constants.CAN.bottomShooterMotor);
 
     topShooterMotor.clearStickyFaults();
     bottomShooterMotor.clearStickyFaults();

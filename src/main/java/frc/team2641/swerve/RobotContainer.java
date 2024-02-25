@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
+// import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.commands.ShootCommand;
 import frc.team2641.swerve.commands.ClimbCommand;
-import frc.team2641.swerve.commands.auto.LimelightTracking;
+// import frc.team2641.swerve.commands.auto.LimelightTracking;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -86,13 +86,12 @@ public class RobotContainer {
     // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
 
-    new JoystickButton(driverGamepad, 3).whileTrue(new FireCommand(4));
-    new JoystickButton(driverGamepad, 4).whileTrue(new FireCommand(1));
-    new JoystickButton(driverGamepad, 5).whileTrue(new FireCommand(3));
-    new JoystickButton(driverGamepad, 6).whileTrue(new FireCommand(2));
-    // new JoystickButton(driverGamepad, 8).onTrue(new LimelightTracking());
-    new POVButton(driverGamepad, 0).whileTrue(new ClimbCommand(1));
-    new POVButton(driverGamepad, 180).whileTrue(new ClimbCommand(2));
+    new JoystickButton(driverGamepad, 3).whileTrue(new ShootCommand(4));
+    new JoystickButton(driverGamepad, 4).whileTrue(new ShootCommand(1));
+    new JoystickButton(driverGamepad, 5).whileTrue(new ShootCommand(3));
+    new JoystickButton(driverGamepad, 6).whileTrue(new ShootCommand(2));
+    // new JoystickButton(driverGamepad, 2).onTrue(new LimelightTracking());
+    new JoystickButton(driverGamepad, 1).whileTrue(new ClimbCommand());
   }
 
   /**
