@@ -14,29 +14,38 @@ public class Climber extends SubsystemBase {
     return instance;
   }
 
-  public TalonFX climberMotor;
+  public TalonFX climberMotor1;
+  public TalonFX climberMotor2;
 
   public Climber() {
-    climberMotor = new TalonFX(Constants.Motors.climberMotor);
-    climberMotor.clearStickyFaults();
-    climberMotor.setNeutralMode(NeutralModeValue.Brake);
-    climberMotor.setPosition(0);
+    climberMotor1 = new TalonFX(Constants.Motors.leftClimberMotor);
+    climberMotor1.clearStickyFaults();
+    climberMotor1.setNeutralMode(NeutralModeValue.Brake);
+    climberMotor1.setPosition(0);
+    
+    climberMotor2 = new TalonFX(Constants.Motors.rightClimberMotor);
+    climberMotor2.clearStickyFaults();
+    climberMotor2.setNeutralMode(NeutralModeValue.Brake);
+    climberMotor2.setPosition(0);
   }
 
   public void up() {
-    climberMotor.set(Constants.MotorSpeeds.climbSpeed);
+    climberMotor1.set(-Constants.MotorSpeeds.climbSpeed);
+    climberMotor2.set(Constants.MotorSpeeds.climbSpeed);
   }
 
   public void down() {
-    climberMotor.set(-Constants.MotorSpeeds.climbSpeed);
+    climberMotor1.set(Constants.MotorSpeeds.climbSpeed);
+    climberMotor2.set(-Constants.MotorSpeeds.climbSpeed);
   }
 
   public void stop() {
-    climberMotor.stopMotor();
+    climberMotor1.stopMotor();
+    climberMotor2.stopMotor();
   }
 
   public double getPosition() {
-    return climberMotor.getPosition().getValue();
+    return climberMotor1.getPosition().getValue();
   }
 
   @Override

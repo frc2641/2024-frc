@@ -27,7 +27,7 @@ public class Shooter extends SubsystemBase {
 
   public void speaker() {
     topShooterMotor.set(Constants.MotorSpeeds.speakerSpeed);
-    Timer.delay(1.25);
+    Timer.delay(1.5);
     bottomShooterMotor.set(Constants.MotorSpeeds.speakerSpeed);
   }
 
@@ -44,7 +44,7 @@ public class Shooter extends SubsystemBase {
 
   public void trap() {
     topShooterMotor.set(Constants.MotorSpeeds.trapSpeed);
-    Timer.delay(0.125);
+    Timer.delay(1.5);
     bottomShooterMotor.set(Constants.MotorSpeeds.trapSpeed);
   }
 

@@ -44,14 +44,15 @@ public final class Constants {
   public static final class Motors {
     public static final int topShooterMotor = 14;
     public static final int bottomShooterMotor = 13;
-    public static final int climberMotor = 15;
+    public static final int leftClimberMotor = 15;
+    public static final int rightClimberMotor = 16;
   }
 
   public static final class MotorSpeeds {
     public static final double speakerSpeed = 1;
-    public static final double ampSpeed = 0.2;
-    public static final double trapSpeed = 1;
-    public static final double intakeSpeed = 0.35;
+    public static final double ampSpeed = 0.115;
+    public static final double trapSpeed = 0.8;
+    public static final double intakeSpeed = 0.1;
     public static final double climbSpeed = 0.35;
   }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -53,12 +54,12 @@ public class RobotContainer {
     driveGamepad = drivetrain.driveCommand(
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverGamepad.getRightX());
+        () -> -driverGamepad.getRightX());
 
     driveJoystick = drivetrain.driveCommand(
         () -> MathUtil.applyDeadband(-driverJoystick.getY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(-driverJoystick.getX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverJoystick.getTwist());
+        () -> -driverJoystick.getTwist());
 
     driveSim = drivetrain.simDriveCommand(
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -81,15 +82,17 @@ public class RobotContainer {
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    // new JoystickButton(driverGamepad, 1).onTrue((new InstantCommand(drivetrain::zeroGyro)));
+    new JoystickButton(driverGamepad, 8).onTrue((new InstantCommand(drivetrain::zeroGyro)));
     // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
-    new JoystickButton(driverGamepad, 3).whileTrue(new ShootCommand(4));
-    new JoystickButton(driverGamepad, 4).whileTrue(new ShootCommand(1));
-    new JoystickButton(driverGamepad, 5).whileTrue(new ShootCommand(3));
-    new JoystickButton(driverGamepad, 6).whileTrue(new ShootCommand(2));
-    new POVButton(driverGamepad, 0).onTrue(new ClimbCommand(2));
-    new POVButton(driverGamepad, 180).onTrue(new ClimbCommand(1));
+
+    new JoystickButton(driverGamepad, 3).whileTrue(new FireCommand(4));
+    new JoystickButton(driverGamepad, 4).whileTrue(new FireCommand(1));
+    new JoystickButton(driverGamepad, 5).whileTrue(new FireCommand(3));
+    new JoystickButton(driverGamepad, 6).whileTrue(new FireCommand(2));
+    // new JoystickButton(driverGamepad, 8).onTrue(new LimelightTracking());
+    new POVButton(driverGamepad, 0).whileTrue(new ClimbCommand(1));
+    new POVButton(driverGamepad, 180).whileTrue(new ClimbCommand(2));
   }
 
   /**

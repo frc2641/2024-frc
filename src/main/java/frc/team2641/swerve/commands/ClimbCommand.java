@@ -1,7 +1,7 @@
 package frc.team2641.swerve.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.swerve.Constants;
+// import frc.team2641.swerve.Constants;
 import frc.team2641.swerve.subsystems.Climber;
 
 public class ClimbCommand extends Command {
@@ -20,20 +20,19 @@ public class ClimbCommand extends Command {
   @Override
   public void execute() {
     if (direction == 1) {
-      if (climber.getPosition() < Constants.CLIMBER_STOP) {
+      // if (climber.getPosition() < Constants.CLIMBER_STOP) {
         climber.down();
-      }
-      else {
-        climber.stop();
-      }
-    }
-    else if (direction == 2) {
-      if (climber.getPosition() > 0) {
+      // }
+      // else {
+        // climber.stop();
+      // }
+    } else if (direction == 2) {
+      // if (climber.getPosition() > 0) {
         climber.up();
-      }
-      else {
-        climber.stop();
-      }
+      // }
+      // else {
+        // climber.stop();
+      // }
     }
   }
 
