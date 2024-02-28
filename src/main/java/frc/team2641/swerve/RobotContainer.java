@@ -4,6 +4,8 @@
 
 package frc.team2641.swerve;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.commands.ShootCommand;
+import frc.team2641.swerve.commands.auto.LimelightTracking;
 import frc.team2641.swerve.commands.ClimbCommand;
 // import frc.team2641.swerve.commands.auto.LimelightTracking;
 
@@ -33,7 +36,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
 
   XboxController driverGamepad = new XboxController(0);
-  Joystick driverJoystick = new Joystick(1);
+  XboxController operatorGamepad = new XboxController(1);
+  // Joystick driverJoystick = new Joystick(1);
 
   Command driveGamepad;
   Command driveJoystick;
@@ -56,10 +60,10 @@ public class RobotContainer {
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverGamepad.getRightX());
 
-    driveJoystick = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(-driverJoystick.getY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverJoystick.getX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverJoystick.getTwist());
+    // driveJoystick = drivetrain.driveCommand(
+    //     () -> MathUtil.applyDeadband(-driverJoystick.getY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //     () -> MathUtil.applyDeadband(-driverJoystick.getX(), OperatorConstants.LEFT_X_DEADBAND),
+    //     () -> -driverJoystick.getTwist());
 
     driveSim = drivetrain.simDriveCommand(
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -70,6 +74,8 @@ public class RobotContainer {
     pub = table.getBooleanTopic("driveMode").publish();
     pub.set(false);
     sub = table.getBooleanTopic("driveMode").subscribe(false);
+
+    NamedCommands.registerCommand("shootHigh", new ShootCommand(2));
 
     drivetrain.setDefaultCommand(!RobotBase.isSimulation() ? driveGamepad : driveSim);
   }
@@ -83,15 +89,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
     new JoystickButton(driverGamepad, 8).onTrue((new InstantCommand(drivetrain::zeroGyro)));
+    new JoystickButton(driverGamepad, 2).whileTrue((new LimelightTracking()));
     // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
 
-    new JoystickButton(driverGamepad, 3).whileTrue(new ShootCommand(4));
-    new JoystickButton(driverGamepad, 4).whileTrue(new ShootCommand(1));
-    new JoystickButton(driverGamepad, 5).whileTrue(new ShootCommand(3));
-    new JoystickButton(driverGamepad, 6).whileTrue(new ShootCommand(2));
+    new JoystickButton(operatorGamepad, 3).whileTrue(new ShootCommand(4));
+    new JoystickButton(operatorGamepad, 4).whileTrue(new ShootCommand(1));
+    new JoystickButton(operatorGamepad, 5).whileTrue(new ShootCommand(3));
+    new JoystickButton(operatorGamepad, 6).whileTrue(new ShootCommand(2));
     // new JoystickButton(driverGamepad, 2).onTrue(new LimelightTracking());
-    new JoystickButton(driverGamepad, 1).whileTrue(new ClimbCommand());
+    new JoystickButton(operatorGamepad, 1).whileTrue(new ClimbCommand());
   }
 
   /**
@@ -100,7 +107,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drivetrain.getAutonomousCommand("New Auto");
+    return drivetrain.getAutonomousCommand("Shoot High");
     // return new LimelightTracking();
   }
 

@@ -4,6 +4,7 @@
 
 package frc.team2641.swerve;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -53,14 +54,10 @@ public class Robot extends TimedRobot {
     pdh = new PowerDistribution(Constants.CAN.pdh, PowerDistribution.ModuleType.kRev);
     ph = new PneumaticHub(Constants.CAN.ph);
 
+    CameraServer.startAutomaticCapture();
     pneumatics = Pneumatics.getInstance();
 
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-
-    // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
-    // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
     // Toggle button for switching between gamepad and joystick control for driver tryouts

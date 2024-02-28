@@ -24,11 +24,11 @@ public class ShootCommand extends Command {
     if (speed == 1) {
       shooter.amp();
       Timer.delay(0.75);
-      drivetrain.drive(new Translation2d(5.0, 0), 0, true);
+      drivetrain.drive(new Translation2d(5.0, 0), 0, false);
       Timer.delay(0.5);
-      drivetrain.drive(new Translation2d(-5.0, 0), 0, true);
+      drivetrain.drive(new Translation2d(-5.0, 0), 0, false);
       Timer.delay(0.5);
-      drivetrain.drive(new Translation2d(0, 0), 0, true);
+      drivetrain.drive(new Translation2d(0, 0), 0, false);
     } else if (speed == 2) {
       shooter.speaker();
     } else if (speed == 3) {

@@ -24,7 +24,7 @@ public class Climber extends SubsystemBase {
     return instance;
   }
 
-  private DoubleSolenoid climber = Robot.getPH().makeDoubleSolenoid(9, 10);
+  private DoubleSolenoid climber = Robot.getPH().makeDoubleSolenoid(10, 9);
 
   private Climber() {
     lower();
