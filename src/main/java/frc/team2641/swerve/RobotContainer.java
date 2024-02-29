@@ -13,6 +13,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,6 +26,8 @@ import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.commands.ShootCommand;
 import frc.team2641.swerve.commands.auto.LimelightTracking;
+import frc.team2641.swerve.commands.auto.AutoShoot;
+import frc.team2641.swerve.commands.auto.Creep;
 import frc.team2641.swerve.commands.ClimbCommand;
 // import frc.team2641.swerve.commands.auto.LimelightTracking;
 
@@ -38,6 +42,8 @@ public class RobotContainer {
   XboxController driverGamepad = new XboxController(0);
   XboxController operatorGamepad = new XboxController(1);
   // Joystick driverJoystick = new Joystick(1);
+
+  private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
   Command driveGamepad;
   Command driveJoystick;
@@ -75,7 +81,14 @@ public class RobotContainer {
     pub.set(false);
     sub = table.getBooleanTopic("driveMode").subscribe(false);
 
-    NamedCommands.registerCommand("shootHigh", new ShootCommand(2));
+    NamedCommands.registerCommand("shootHigh", new AutoShoot());
+    NamedCommands.registerCommand("creep", new Creep());
+
+    autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
+    // autoChooser.addOption("Top Start", "Top Start");
+    // autoChooser.addOption("Center Start", "Center Start");
+    autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
+    SmartDashboard.putData("Auto", autoChooser);
 
     drivetrain.setDefaultCommand(!RobotBase.isSimulation() ? driveGamepad : driveSim);
   }
@@ -90,6 +103,7 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driverGamepad, 8).onTrue((new InstantCommand(drivetrain::zeroGyro)));
     new JoystickButton(driverGamepad, 2).whileTrue((new LimelightTracking()));
+    //new JoystickButton(driverGamepad, 6).whileTrue((new SniperMode()));
     // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
 
@@ -107,7 +121,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drivetrain.getAutonomousCommand("Shoot High");
+    return drivetrain.getAutonomousCommand(autoChooser.getSelected());
     // return new LimelightTracking();
   }
 

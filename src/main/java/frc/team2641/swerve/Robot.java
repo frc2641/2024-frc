@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2641.swerve.commands.ToggleDriveMode;
+import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.subsystems.Pneumatics;
 
 import java.io.File;
@@ -31,6 +33,7 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
 
   private static Pneumatics pneumatics;
+  private static Drivetrain drivetrain;
 
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
@@ -54,7 +57,10 @@ public class Robot extends TimedRobot {
     pdh = new PowerDistribution(Constants.CAN.pdh, PowerDistribution.ModuleType.kRev);
     ph = new PneumaticHub(Constants.CAN.ph);
 
-    CameraServer.startAutomaticCapture();
+    drivetrain = Drivetrain.getInstance();
+
+    CameraServer.startAutomaticCapture(0);
+    CameraServer.startAutomaticCapture(1);
     pneumatics = Pneumatics.getInstance();
 
     robotContainer = new RobotContainer();
@@ -104,6 +110,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    drivetrain.zeroGyro();
     robotContainer.setMotorBrake(true);
     autoCommand = robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
@@ -124,6 +131,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    drivetrain.zeroGyro();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
