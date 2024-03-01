@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.commands.ShootCommand;
-import frc.team2641.swerve.commands.SniperMode;
 import frc.team2641.swerve.commands.auto.LimelightTracking;
 import frc.team2641.swerve.commands.shifts.RobotRelative;
+import frc.team2641.swerve.commands.shifts.SniperMode;
 import frc.team2641.swerve.commands.auto.AutoShoot;
 import frc.team2641.swerve.commands.auto.Creep;
 import frc.team2641.swerve.commands.ClimbCommand;
@@ -71,9 +71,9 @@ public class RobotContainer {
     // Applies deadbands and inverts controls because joysticks are back-right positive, while robot controls are front-left
     // positive. The left stick controls translation and the right stick controls the desired angle, NOT angular rotation.
     driveCommand = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.5 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.5 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> sniperSub.get() ? -driverGamepad.getRightX() * 0.5 : -driverGamepad.getRightX(),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> sniperSub.get() ? -driverGamepad.getRightX() * 0.25 : -driverGamepad.getRightX(),
         () -> robotSub.get());
 
     driveSim = drivetrain.simDriveCommand(
