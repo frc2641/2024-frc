@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,12 +23,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
-import frc.team2641.swerve.RobotContainer;
 import frc.team2641.swerve.Constants.AutoConstants;
 import frc.team2641.swerve.Constants.DriveConstants;
-import frc.team2641.swerve.commands.RobotRelativeMode;
-import frc.team2641.swerve.commands.SniperMode;
 import java.io.File;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -65,12 +62,7 @@ public class Drivetrain extends SubsystemBase {
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
-      if (SniperMode.getSniperMode()) {
-        swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(DriveConstants.SLOW_MAX_SPEED);
-      }
-      else {
-        swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(DriveConstants.FAST_MAX_SPEED);
-      }
+      swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(DriveConstants.MAX_SPEED);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -86,12 +78,7 @@ public class Drivetrain extends SubsystemBase {
    * @param controllerCfg Swerve Controller.
    */
   private Drivetrain(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-    if (SniperMode.getSniperMode()) {
-      swerveDrive = new SwerveDrive(driveCfg, controllerCfg, DriveConstants.SLOW_MAX_SPEED);
-    }
-    else {
-      swerveDrive = new SwerveDrive(driveCfg, controllerCfg, DriveConstants.FAST_MAX_SPEED);
-    }
+    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, DriveConstants.MAX_SPEED);
   }
 
   /**
@@ -184,7 +171,6 @@ public class Drivetrain extends SubsystemBase {
    * @return Drive command.
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY) {
-    System.out.println("X: " + headingX.getAsDouble() + " Y: " + headingY.getAsDouble());
     // swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
     return run(() -> {
       double xInput = Math.pow(translationX.getAsDouble(), 3); // Smooth controll out
@@ -252,23 +238,13 @@ public class Drivetrain extends SubsystemBase {
    * @param angularRotationX Angular velocity of the robot to set. Cubed for smoother controls.
    * @return Drive command.
    */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX) {
+  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX, BooleanSupplier robotRelative) {
     return run(() -> {
-      // Make the robot move
-      if (RobotRelativeMode.getRobotRelative()) {
         swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
                                             Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
                                             Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-                                            false,
+                                            !robotRelative.getAsBoolean(),
                                             false);
-      }
-      else {
-        swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
-                                            Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
-                                            Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-                                            true,
-                                            false);
-      }
     });
   }
 
@@ -405,20 +381,12 @@ public class Drivetrain extends SubsystemBase {
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY) {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
-    if (SniperMode.getSniperMode()) {
     return swerveDrive.swerveController.getTargetSpeeds(xInput,
                                                         yInput,
                                                         headingX,
                                                         headingY,
                                                         getHeading().getRadians(),
-                                                        DriveConstants.SLOW_MAX_SPEED);
-    }
-    return swerveDrive.swerveController.getTargetSpeeds(xInput,
-                                                        yInput,
-                                                        headingX,
-                                                        headingY,
-                                                        getHeading().getRadians(),
-                                                        DriveConstants.FAST_MAX_SPEED);
+                                                        DriveConstants.MAX_SPEED);
   }
 
   /**
@@ -433,18 +401,11 @@ public class Drivetrain extends SubsystemBase {
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle) {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
-    if (SniperMode.getSniperMode()) {
-      return swerveDrive.swerveController.getTargetSpeeds(xInput,
-                                                          yInput,
-                                                          angle.getRadians(),
-                                                          getHeading().getRadians(),
-                                                          DriveConstants.SLOW_MAX_SPEED);
-    }
     return swerveDrive.swerveController.getTargetSpeeds(xInput,
                                                         yInput,
                                                         angle.getRadians(),
                                                         getHeading().getRadians(),
-                                                        DriveConstants.FAST_MAX_SPEED);
+                                                        DriveConstants.MAX_SPEED);
   }
 
   /**

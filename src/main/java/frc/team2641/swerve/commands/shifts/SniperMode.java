@@ -2,35 +2,38 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.team2641.swerve.commands.auto;
+package frc.team2641.swerve.commands.shifts;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.swerve.subsystems.Drivetrain;
 
-public class Creep extends Command {
-  private Drivetrain drivetrain;
-  /** Creates a new Creep. */
-  public Creep() {
-    drivetrain = Drivetrain.getInstance();
-    addRequirements(drivetrain);
-    // Use addRequirements() here to declare subsystem dependencies.
+public class SniperMode extends Command {
+  BooleanPublisher sniperPub;
+
+  /** Creates a new SniperMode. */
+  public SniperMode() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+
+    sniperPub = table.getBooleanTopic("sniperMode").publish();
+    sniperPub.set(false);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    sniperPub.set(true);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    drivetrain.drive(new Translation2d(0.8, 0), 0, false);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.drive(new Translation2d(0, 0), 0, false);
+    sniperPub.set(false);
   }
 
   // Returns true when the command should end.

@@ -10,18 +10,13 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.swerve.commands.ToggleDriveMode;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.subsystems.Pneumatics;
-
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -65,9 +60,6 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
-
-    // Toggle button for switching between gamepad and joystick control for driver tryouts
-    SmartDashboard.putData("Toggle Drive Mode", new ToggleDriveMode());
   }
 
   /**

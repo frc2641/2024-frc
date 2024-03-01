@@ -5,29 +5,25 @@
 package frc.team2641.swerve;
 
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.commands.ShootCommand;
 import frc.team2641.swerve.commands.SniperMode;
-import frc.team2641.swerve.commands.RobotRelativeMode;
 import frc.team2641.swerve.commands.auto.LimelightTracking;
+import frc.team2641.swerve.commands.shifts.RobotRelative;
 import frc.team2641.swerve.commands.auto.AutoShoot;
 import frc.team2641.swerve.commands.auto.Creep;
 import frc.team2641.swerve.commands.ClimbCommand;
@@ -41,18 +37,19 @@ import frc.team2641.swerve.commands.ClimbCommand;
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
 
-  XboxController driverGamepad = new XboxController(0);
-  XboxController operatorGamepad = new XboxController(1);
-  // Joystick driverJoystick = new Joystick(1);
+  CommandXboxController driverGamepad = new CommandXboxController(0);
+  CommandXboxController operatorGamepad = new CommandXboxController(1);
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
-  Command driveGamepad;
-  Command driveJoystick;
+  Command driveCommand;
   Command driveSim;
 
-  BooleanSubscriber sub;
-  BooleanPublisher pub;
+  BooleanPublisher sniperPub;
+  BooleanSubscriber sniperSub;
+
+  BooleanPublisher robotPub;
+  BooleanSubscriber robotSub;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -61,27 +58,28 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+
+    sniperPub = table.getBooleanTopic("sniperMode").publish();
+    sniperPub.set(false);
+    sniperSub = table.getBooleanTopic("sniperMode").subscribe(false);
+
+    robotPub = table.getBooleanTopic("robotRelative").publish();
+    robotPub.set(false);
+    robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
+
     // Applies deadbands and inverts controls because joysticks are back-right positive, while robot controls are front-left
     // positive. The left stick controls translation and the right stick controls the desired angle, NOT angular rotation.
-    driveGamepad = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverGamepad.getRightX());
-
-    // driveJoystick = drivetrain.driveCommand(
-    //     () -> MathUtil.applyDeadband(-driverJoystick.getY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(-driverJoystick.getX(), OperatorConstants.LEFT_X_DEADBAND),
-    //     () -> -driverJoystick.getTwist());
+    driveCommand = drivetrain.driveCommand(
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.5 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.5 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> sniperSub.get() ? -driverGamepad.getRightX() * 0.5 : -driverGamepad.getRightX(),
+        () -> robotSub.get());
 
     driveSim = drivetrain.simDriveCommand(
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverGamepad.getRawAxis(2));
-
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
-    pub = table.getBooleanTopic("driveMode").publish();
-    pub.set(false);
-    sub = table.getBooleanTopic("driveMode").subscribe(false);
 
     NamedCommands.registerCommand("shootHigh", new AutoShoot());
     NamedCommands.registerCommand("creep", new Creep());
@@ -92,7 +90,7 @@ public class RobotContainer {
     autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
     SmartDashboard.putData("Auto", autoChooser);
 
-    drivetrain.setDefaultCommand(!RobotBase.isSimulation() ? driveGamepad : driveSim);
+    drivetrain.setDefaultCommand(!RobotBase.isSimulation() ? driveCommand : driveSim);
   }
 
   /**
@@ -103,18 +101,16 @@ public class RobotContainer {
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverGamepad, 8).onTrue((new InstantCommand(drivetrain::zeroGyro)));
-    new JoystickButton(driverGamepad, 2).whileTrue((new LimelightTracking()));
-    new JoystickButton(driverGamepad, 6).whileTrue(new SniperMode());
-    new JoystickButton(driverGamepad, 5).whileTrue(new RobotRelativeMode());
-    // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
-    // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
+    driverGamepad.b().whileTrue(new LimelightTracking());
+    driverGamepad.leftTrigger().whileTrue(new SniperMode());
+    driverGamepad.rightTrigger().whileTrue(new RobotRelative());
+    driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
-    new JoystickButton(operatorGamepad, 3).whileTrue(new ShootCommand(4));
-    new JoystickButton(operatorGamepad, 4).whileTrue(new ShootCommand(1));
-    new JoystickButton(operatorGamepad, 5).whileTrue(new ShootCommand(3));
-    new JoystickButton(operatorGamepad, 6).whileTrue(new ShootCommand(2));
-    new JoystickButton(operatorGamepad, 1).whileTrue(new ClimbCommand());
+    operatorGamepad.a().whileTrue(new ClimbCommand());
+    operatorGamepad.x().whileTrue(new ShootCommand(4));
+    operatorGamepad.y().whileTrue(new ShootCommand(1));
+    operatorGamepad.leftBumper().whileTrue(new ShootCommand(3));
+    operatorGamepad.rightBumper().whileTrue(new ShootCommand(2));
   }
 
   /**
@@ -125,26 +121,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return drivetrain.getAutonomousCommand(autoChooser.getSelected());
     // return new LimelightTracking();
-  }
-
-  /**
-   * Toggles between gamepad and joystick control for driver tryouts
-   */
-  public void toggleDriveMode() {
-    boolean driveMode = !getDriveMode();
-    pub.set(driveMode);
-
-    if (driveMode) drivetrain.setDefaultCommand(driveGamepad);
-    else drivetrain.setDefaultCommand(driveJoystick);
-  }
-
-  /**
-   * Gets whether robot is controlled by gamepad or joystick
-   * 
-   * @return true if controlled by joystick, false if controlled by gamepad
-   */
-  public boolean getDriveMode() {
-    return sub.get();
   }
 
   /**
