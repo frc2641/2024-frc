@@ -31,7 +31,8 @@ public final class Constants {
 
   public static final class DriveConstants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
-    public static final double MAX_SPEED = 4; // m/s
+    public static final double FAST_MAX_SPEED = 4; // m/s
+    public static final double SLOW_MAX_SPEED = 1; // m/s
   }
 
   public static class OperatorConstants {

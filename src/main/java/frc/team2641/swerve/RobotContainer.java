@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
 import frc.team2641.swerve.commands.ShootCommand;
+import frc.team2641.swerve.commands.SniperMode;
+import frc.team2641.swerve.commands.RobotRelativeMode;
 import frc.team2641.swerve.commands.auto.LimelightTracking;
 import frc.team2641.swerve.commands.auto.AutoShoot;
 import frc.team2641.swerve.commands.auto.Creep;
@@ -103,7 +105,8 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driverGamepad, 8).onTrue((new InstantCommand(drivetrain::zeroGyro)));
     new JoystickButton(driverGamepad, 2).whileTrue((new LimelightTracking()));
-    //new JoystickButton(driverGamepad, 6).whileTrue((new SniperMode()));
+    new JoystickButton(driverGamepad, 6).whileTrue(new SniperMode());
+    new JoystickButton(driverGamepad, 5).whileTrue(new RobotRelativeMode());
     // new JoystickButton(driverGamepad, 2).whileTrue(Commands.deferredProxy(() -> drivetrain.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     // new JoystickButton(driverGamepad, 3).whileTrue(new RepeatCommand(new InstantCommand(drivetrain::lock, drivetrain)));
 
@@ -111,7 +114,6 @@ public class RobotContainer {
     new JoystickButton(operatorGamepad, 4).whileTrue(new ShootCommand(1));
     new JoystickButton(operatorGamepad, 5).whileTrue(new ShootCommand(3));
     new JoystickButton(operatorGamepad, 6).whileTrue(new ShootCommand(2));
-    // new JoystickButton(driverGamepad, 2).onTrue(new LimelightTracking());
     new JoystickButton(operatorGamepad, 1).whileTrue(new ClimbCommand());
   }
 
