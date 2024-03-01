@@ -31,7 +31,7 @@ public final class Constants {
 
   public static final class DriveConstants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
-    public static final double MAX_SPEED = 4; // m/s
+    public static final double MAX_SPEED = 6; // m/s
   }
 
   public static class OperatorConstants {
@@ -52,7 +52,7 @@ public final class Constants {
 
   public static final class MotorSpeeds {
     public static final double speakerSpeed = 1;
-    public static final double ampSpeed = 0.15;
+    public static final double ampSpeed = 0.11;
     public static final double trapSpeed = 0.8;
     public static final double intakeSpeed = 0.1;
     public static final double climbSpeed = 0.35;

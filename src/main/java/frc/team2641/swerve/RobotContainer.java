@@ -10,7 +10,6 @@ import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -71,15 +70,10 @@ public class RobotContainer {
     // Applies deadbands and inverts controls because joysticks are back-right positive, while robot controls are front-left
     // positive. The left stick controls translation and the right stick controls the desired angle, NOT angular rotation.
     driveCommand = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> sniperSub.get() ? -driverGamepad.getRightX() * 0.25 : -driverGamepad.getRightX(),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.5 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.5 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> sniperSub.get() ? -driverGamepad.getRightX() * 0.5 : -driverGamepad.getRightX(),
         () -> robotSub.get());
-
-    driveSim = drivetrain.simDriveCommand(
-        () -> MathUtil.applyDeadband(-driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(-driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverGamepad.getRawAxis(2));
 
     NamedCommands.registerCommand("shootHigh", new AutoShoot());
     NamedCommands.registerCommand("creep", new Creep());
@@ -90,7 +84,7 @@ public class RobotContainer {
     autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
     SmartDashboard.putData("Auto", autoChooser);
 
-    drivetrain.setDefaultCommand(!RobotBase.isSimulation() ? driveCommand : driveSim);
+    drivetrain.setDefaultCommand(driveCommand);
   }
 
   /**
