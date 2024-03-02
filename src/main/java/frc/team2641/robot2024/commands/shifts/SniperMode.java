@@ -2,33 +2,28 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.team2641.swerve.commands.shooter;
+package frc.team2641.robot2024.commands.shifts;
 
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.swerve.subsystems.Shooter;
 
-public class Shoot extends Command {
-  private Shooter shooter;
-  private int speed;
+public class SniperMode extends Command {
+  BooleanPublisher sniperPub;
 
-  /** Creates a new Flywheel. */
-  public Shoot(int speed) {
-    shooter = Shooter.getInstance();
-    this.speed = speed;
-    addRequirements(shooter);
+  /** Creates a new SniperMode. */
+  public SniperMode() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+
+    sniperPub = table.getBooleanTopic("sniperMode").publish();
+    sniperPub.set(false);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (speed == 1)
-      shooter.amp();
-    else if (speed == 2)
-      shooter.speaker();
-    else if (speed == 3)
-      shooter.intake();
-    else if (speed == 4)
-      shooter.trap();
+    sniperPub.set(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +34,7 @@ public class Shoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
+    sniperPub.set(false);
   }
 
   // Returns true when the command should end.

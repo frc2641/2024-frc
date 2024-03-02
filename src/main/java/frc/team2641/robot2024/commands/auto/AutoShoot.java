@@ -1,8 +1,8 @@
-package frc.team2641.swerve.commands.auto;
+package frc.team2641.robot2024.commands.auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.swerve.subsystems.Shooter;
+import frc.team2641.robot2024.subsystems.Shooter;
 
 public class AutoShoot extends Command {
   private Shooter shooter;
@@ -23,7 +23,8 @@ public class AutoShoot extends Command {
 
   @Override
   public void execute() {
-    if (timer.hasElapsed(3)) end(false);
+    if (timer.hasElapsed(3))
+      end(false);
   }
 
   @Override

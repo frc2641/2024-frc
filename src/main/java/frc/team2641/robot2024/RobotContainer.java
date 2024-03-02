@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.team2641.swerve;
+package frc.team2641.robot2024;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
@@ -16,15 +16,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team2641.swerve.Constants.OperatorConstants;
-import frc.team2641.swerve.subsystems.Drivetrain;
-import frc.team2641.swerve.commands.auto.LimelightTracking;
-import frc.team2641.swerve.commands.shifts.RobotRelative;
-import frc.team2641.swerve.commands.shifts.SniperMode;
-import frc.team2641.swerve.commands.shooter.*;
-import frc.team2641.swerve.commands.auto.AutoShoot;
-import frc.team2641.swerve.commands.auto.Creep;
-import frc.team2641.swerve.commands.Climb;
+import frc.team2641.robot2024.Constants.OperatorConstants;
+import frc.team2641.robot2024.commands.Climb;
+import frc.team2641.robot2024.commands.auto.AutoShoot;
+import frc.team2641.robot2024.commands.auto.Creep;
+import frc.team2641.robot2024.commands.auto.LimelightTracking;
+import frc.team2641.robot2024.commands.shifts.RobotRelative;
+import frc.team2641.robot2024.commands.shifts.SniperMode;
+import frc.team2641.robot2024.commands.shooter.*;
+import frc.team2641.robot2024.subsystems.Drivetrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since

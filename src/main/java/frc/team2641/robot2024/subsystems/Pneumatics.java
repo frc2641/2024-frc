@@ -1,11 +1,11 @@
 // Copyright (c) 2024 FRC Team 2641
 // Use of this source code is governed by the MIT license
 
-package frc.team2641.swerve.subsystems;
+package frc.team2641.robot2024.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2641.swerve.Robot;
+import frc.team2641.robot2024.Robot;
 
 public class Pneumatics extends SubsystemBase {
   private static Pneumatics instance = null;
