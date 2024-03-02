@@ -4,6 +4,7 @@
 
 package frc.team2641.swerve;
 
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -55,6 +56,10 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
+
+    for (int port = 5800; port <= 5807; port++) {
+      PortForwarder.add(port, "10.26.41.25", port);
+    }
   }
 
   /**
