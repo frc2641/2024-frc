@@ -15,23 +15,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-// import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.swerve.Constants.OperatorConstants;
 import frc.team2641.swerve.subsystems.Drivetrain;
-import frc.team2641.swerve.commands.ShootCommand;
 import frc.team2641.swerve.commands.auto.LimelightTracking;
 import frc.team2641.swerve.commands.shifts.RobotRelative;
 import frc.team2641.swerve.commands.shifts.SniperMode;
+import frc.team2641.swerve.commands.shooter.*;
 import frc.team2641.swerve.commands.auto.AutoShoot;
 import frc.team2641.swerve.commands.auto.Creep;
-import frc.team2641.swerve.commands.ClimbCommand;
-// import frc.team2641.swerve.commands.auto.LimelightTracking;
+import frc.team2641.swerve.commands.Climb;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
- * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
- * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very
+ * little robot logic should actually be handled in the {@link Robot} periodic
+ * methods (other than the scheduler calls).
+ * Instead, the structure of the robot (including subsystems, commands, and
+ * trigger mappings) should be declared here.
  */
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
@@ -67,11 +68,11 @@ public class RobotContainer {
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
 
-    // Applies deadbands and inverts controls because joysticks are back-right positive, while robot controls are front-left
-    // positive. The left stick controls translation and the right stick controls the desired angle, NOT angular rotation.
     driveCommand = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.5 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.5 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.5 : -driverGamepad.getLeftY(),
+            OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.5 : -driverGamepad.getLeftX(),
+            OperatorConstants.LEFT_X_DEADBAND),
         () -> sniperSub.get() ? -driverGamepad.getRightX() * 0.5 : -driverGamepad.getRightX(),
         () -> robotSub.get());
 
@@ -88,11 +89,17 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary predicate, or via the
+   * named factories in
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses
+   * for
+   * {@link CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
+   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
+   * Flight joysticks}.
    */
   private void configureBindings() {
     driverGamepad.b().whileTrue(new LimelightTracking());
@@ -100,11 +107,11 @@ public class RobotContainer {
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
-    operatorGamepad.a().whileTrue(new ClimbCommand());
-    operatorGamepad.x().whileTrue(new ShootCommand(4));
-    operatorGamepad.y().whileTrue(new ShootCommand(1));
-    operatorGamepad.leftBumper().whileTrue(new ShootCommand(3));
-    operatorGamepad.rightBumper().whileTrue(new ShootCommand(2));
+    operatorGamepad.a().whileTrue(new Climb());
+    operatorGamepad.x().whileTrue(new ShootTrap());
+    operatorGamepad.y().whileTrue(new ShootLow());
+    operatorGamepad.leftBumper().whileTrue(new Intake());
+    operatorGamepad.rightBumper().whileTrue(new ShootHigh());
   }
 
   /**
@@ -114,7 +121,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return drivetrain.getAutonomousCommand(autoChooser.getSelected());
-    // return new LimelightTracking();
   }
 
   /**
