@@ -3,9 +3,11 @@ package frc.team2641.robot2024.commands.auto;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2024.subsystems.Shooter;
+import frc.team2641.robot2024.subsystems.Indexer;
 
 public class AutoShoot extends Command {
   private Shooter shooter;
+  private Indexer indexer;
   private Timer timer;
 
   public AutoShoot() {
@@ -19,6 +21,8 @@ public class AutoShoot extends Command {
   public void initialize() {
     timer.reset();
     shooter.speaker();
+    Timer.delay(2);
+    indexer.speaker();
   }
 
   @Override
