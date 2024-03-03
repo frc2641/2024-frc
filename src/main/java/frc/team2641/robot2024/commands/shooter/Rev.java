@@ -7,28 +7,38 @@ package frc.team2641.robot2024.commands.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2024.subsystems.Shooter;
 
-public class Shoot extends Command {
+public class Rev extends Command {
   private Shooter shooter;
   private int speed;
+  public static boolean revvingAmp;
+  public static boolean revvingSpeaker;
+
 
   /** Creates a new Flywheel. */
-  public Shoot(int speed) {
+  public Rev(int speed) {
     shooter = Shooter.getInstance();
     this.speed = speed;
+    revvingAmp = false;
+    revvingSpeaker = false;
     addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (speed == 1)
+    if (speed == 1) {
       shooter.amp();
-    else if (speed == 2)
+      revvingAmp = true;
+    }
+    else if (speed == 2) {
       shooter.speaker();
-    else if (speed == 3)
-      shooter.intake();
-    else if (speed == 4)
+      revvingSpeaker = true;
+    }
+    else if (speed == 3) {
       shooter.trap();
+    }
+    else if (speed == 4)
+      shooter.intake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +50,8 @@ public class Shoot extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.stop();
+    revvingAmp = false;
+    revvingSpeaker = false;
   }
 
   // Returns true when the command should end.

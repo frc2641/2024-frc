@@ -6,16 +6,16 @@ package frc.team2641.robot2024.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// NOTE: Consider using this command inline, rather than writing a subclass. For
+// more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Intake extends ParallelCommandGroup {
-  /** Creates a new Intake. */
-  public Intake() {
+public class FeedSpeaker extends ParallelCommandGroup {
+
+  /** Creates a new ShootHigh. */
+  public FeedSpeaker() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-        new Rev(4),
-        new Feed(4));
+    addCommands(new Feed(2));
   }
 }

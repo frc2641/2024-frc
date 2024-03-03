@@ -12,19 +12,17 @@ import frc.team2641.robot2024.subsystems.Drivetrain;
 // more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ShootLow extends ParallelCommandGroup {
+public class FeedAmp extends ParallelCommandGroup {
   private Drivetrain drivetrain;
 
   /** Creates a new ShootHigh. */
-  public ShootLow() {
+  public FeedAmp() {
     drivetrain = Drivetrain.getInstance();
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new Shoot(1),
+        new Feed(1),
         Commands.sequence(
-            Commands.waitSeconds(0.5),
-            new Feed(1),
             Commands.waitSeconds(0.75),
             drivetrain.driveCommand(() -> 5.0, () -> 0, () -> 0, () -> false),
             Commands.waitSeconds(0.5),

@@ -5,30 +5,30 @@
 package frc.team2641.robot2024.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.robot2024.subsystems.Feeder;
+import frc.team2641.robot2024.subsystems.Indexer;
 
 public class Feed extends Command {
-  private Feeder feeder;
+  private Indexer indexer;
   private int speed;
 
   /** Creates a new Feed. */
   public Feed(int speed) {
-    feeder = Feeder.getInstance();
+    indexer = Indexer.getInstance();
     this.speed = speed;
-    addRequirements(feeder);
+    addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     if (speed == 1)
-      feeder.amp();
+      indexer.amp();
     else if (speed == 2)
-      feeder.speaker();
+      indexer.speaker();
     else if (speed == 3)
-      feeder.intake();
+      indexer.intake();
     else if (speed == 4)
-      feeder.trap();
+      indexer.trap();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +39,7 @@ public class Feed extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    feeder.stop();
+    indexer.stop();
   }
 
   // Returns true when the command should end.

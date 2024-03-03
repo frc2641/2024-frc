@@ -107,11 +107,15 @@ public class RobotContainer {
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
-    operatorGamepad.a().whileTrue(new Climb());
-    operatorGamepad.x().whileTrue(new ShootTrap());
-    operatorGamepad.y().whileTrue(new ShootLow());
-    operatorGamepad.leftBumper().whileTrue(new Intake());
-    operatorGamepad.rightBumper().whileTrue(new ShootHigh());
+    operatorGamepad.y().whileTrue(new Climb());
+    operatorGamepad.x().whileTrue(new RevTrap());
+    operatorGamepad.a().whileTrue(new RevAmp());
+    operatorGamepad.b().whileTrue(new RevSpeaker());
+    operatorGamepad.leftTrigger().whileTrue(new Intake());
+    operatorGamepad.leftTrigger().whileTrue(
+        Rev.revvingAmp ? new FeedAmp() :
+        Rev.revvingSpeaker ? new FeedSpeaker() :
+        new FeedTrap());
   }
 
   /**
