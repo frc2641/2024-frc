@@ -112,7 +112,7 @@ public class RobotContainer {
     operatorGamepad.a().whileTrue(new RevAmp());
     operatorGamepad.b().whileTrue(new RevSpeaker());
     operatorGamepad.leftTrigger().whileTrue(new Intake());
-    operatorGamepad.leftTrigger().whileTrue(
+    operatorGamepad.rightTrigger().whileTrue(
         Rev.revvingAmp ? new FeedAmp() :
         Rev.revvingSpeaker ? new FeedSpeaker() :
         new FeedTrap());

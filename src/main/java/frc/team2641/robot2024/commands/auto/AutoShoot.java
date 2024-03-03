@@ -34,6 +34,7 @@ public class AutoShoot extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.stop();
+    indexer.stop();
     timer.stop();
   }
 
