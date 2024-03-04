@@ -12,9 +12,10 @@ public class AutoShoot extends Command {
 
   public AutoShoot() {
     this.shooter = Shooter.getInstance();
+    this.indexer = Indexer.getInstance();
     timer = new Timer();
 
-    addRequirements(shooter);
+    addRequirements(shooter, indexer);
   }
 
   @Override
