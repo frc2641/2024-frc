@@ -43,6 +43,25 @@
               {
                 "type": "wait",
                 "data": {
+                  "waitTime": 0.05
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "creep"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
                   "waitTime": 6.0
                 }
               }
