@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+/*// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -36,7 +36,7 @@ import frc.team2641.robot2024.subsystems.Drivetrain;
  * methods (other than the scheduler calls).
  * Instead, the structure of the robot (including subsystems, commands, and
  * trigger mappings) should be declared here.
- */
+ 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
 
@@ -59,16 +59,12 @@ public class RobotContainer {
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+   
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
-
-    alignmentPub = table.getBooleanTopic("alignment").publish();
-    alignmentPub.set(false);
-    alignmentSub = table.getBooleanTopic("alignment").subscribe(false);
 
     sniperPub = table.getBooleanTopic("sniperMode").publish();
     sniperPub.set(false);
@@ -110,12 +106,9 @@ public class RobotContainer {
    * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
    * Flight joysticks}.
-   */
+   
   private void configureBindings() {
     driverGamepad.b().whileTrue(new LimelightTracking());
-    driverGamepad.a().whileTrue(new AlignSource());
-    driverGamepad.y().whileTrue(new AlignAmp());
-    driverGamepad.x().whileTrue(new AlignSpeaker());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
@@ -135,7 +128,7 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   */
+   
   public Command getAutonomousCommand() {
     return drivetrain.getAutonomousCommand(autoChooser.getSelected());
   }
@@ -144,8 +137,9 @@ public class RobotContainer {
    * Sets the brake mode of the drivetrain motors
    * 
    * @param brake true to enable brake mode, false to disable brake mode
-   */
+   
   public void setMotorBrake(boolean brake) {
     drivetrain.setMotorBrake(brake);
   }
 }
+*/
