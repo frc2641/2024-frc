@@ -28,8 +28,6 @@ public class AutoShoot extends Command {
 
   @Override
   public void execute() {
-    if (timer.hasElapsed(3))
-      end(false);
   }
 
   @Override

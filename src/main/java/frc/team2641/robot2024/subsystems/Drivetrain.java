@@ -4,6 +4,7 @@
 
 package frc.team2641.robot2024.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
@@ -53,6 +54,7 @@ public class Drivetrain extends SubsystemBase {
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+  private AHRS ahrs = new AHRS();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -72,6 +74,7 @@ public class Drivetrain extends SubsystemBase {
     swerveDrive.setHeadingCorrection(true); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     setupPathPlanner();
+    ahrs.enableLogging(true);
   }
 
   /**
@@ -415,6 +418,10 @@ public class Drivetrain extends SubsystemBase {
         angle.getRadians(),
         getHeading().getRadians(),
         DriveConstants.MAX_SPEED);
+  }
+
+  public float getYaw() {
+    return ahrs.getYaw();
   }
 
   /**

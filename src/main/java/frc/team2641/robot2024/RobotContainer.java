@@ -17,16 +17,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2641.robot2024.Constants.OperatorConstants;
-import frc.team2641.robot2024.commands.Climb;
-import frc.team2641.robot2024.commands.auto.AlignAmp;
-import frc.team2641.robot2024.commands.auto.AlignSource;
-import frc.team2641.robot2024.commands.auto.AlignSpeaker;
-import frc.team2641.robot2024.commands.auto.AutoShoot;
-import frc.team2641.robot2024.commands.auto.Creep;
-import frc.team2641.robot2024.commands.auto.LimelightTracking;
-import frc.team2641.robot2024.commands.shifts.RobotRelative;
-import frc.team2641.robot2024.commands.shifts.SniperMode;
-import frc.team2641.robot2024.commands.shooter.*;
+import frc.team2641.robot2024.commands.*;
+import frc.team2641.robot2024.commands.auto.*;
+import frc.team2641.robot2024.commands.shifts.*;
 import frc.team2641.robot2024.subsystems.Drivetrain;
 
 /**
@@ -121,14 +114,11 @@ public class RobotContainer {
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
     operatorGamepad.y().whileTrue(new Climb());
-    operatorGamepad.x().whileTrue(new RevTrap());
-    operatorGamepad.a().whileTrue(new RevAmp());
-    operatorGamepad.b().whileTrue(new RevSpeaker());
+    operatorGamepad.a().whileTrue(new Rev(1));
+    operatorGamepad.b().whileTrue(new Rev(2));
+    operatorGamepad.x().whileTrue(new Rev(3));
     operatorGamepad.leftTrigger().whileTrue(new Intake());
-    operatorGamepad.rightTrigger().whileTrue(
-        Rev.revvingAmp ? new FeedAmp() :
-        Rev.revvingSpeaker ? new FeedSpeaker() :
-        new FeedTrap());
+    operatorGamepad.rightTrigger().whileTrue(new Feed());
   }
 
   /**
