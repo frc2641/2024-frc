@@ -1,31 +1,37 @@
 
 package frc.team2641.robot2024.commands.auto;
 
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2024.subsystems.Drivetrain;
 
 public class AutoAlign extends Command {
-    //variables
+
     public int element;
     private Drivetrain drivetrain;
     public static double angularVelocity;
-    private int targetvelocity;
+    private int targetAngle;
     BooleanPublisher alignmentPub;
 
     public AutoAlign(int element) {
         drivetrain = Drivetrain.getInstance();
         this.element = element;
 
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("state")
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+
         alignmentPub = table.getBooleanTopic("autoAlign").publish();
         alignmentPub.set(false);
-       }
+    }
 
     public void initialize() {
         alignmentPub.set(true);
-// probably wrong numbers, also I'm not sure if it's correct in theory.
-/*  
+
+        // probably wrong numbers, also I'm not sure if it's correct in theory.
+        /*
+
         if(element == 1){
             targetVelocity = -90; 
             // low goal 
@@ -46,19 +52,21 @@ public class AutoAlign extends Command {
      * Continue until it's close enough
      */
     public void execute() {
-        if((drivetrain.getYaw()>(targetVelocity+1)||drivetrain.getYaw()<(targetVelocity-1))) {
+        if((drivetrain.getYaw()>(targetAngle+1)||drivetrain.getYaw()<(targetAngle-1))) {
             angularVelocity = 0;
-            public void end(boolean interrupted) {
-             alignmentPub.set(false);
-            }
+            end(false);
         }
         else {
             //angular velocity is how much stuff should move. 
-            angularVelocity = (targetVelocity-drivetrain.getYaw())/180;
+            angularVelocity = (targetAngle-drivetrain.getYaw())/180;
         }
-       }
-   
-       public boolean isFinished() {
+    }
+
+    public void end(boolean interrupted) {
+        alignmentPub.set(false);
+    }
+
+    public boolean isFinished() {
         return false;
-       }
+    }
 }
