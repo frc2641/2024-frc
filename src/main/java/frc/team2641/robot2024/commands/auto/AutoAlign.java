@@ -49,18 +49,18 @@ public class AutoAlign extends Command {
 
         if (targetAngle > 0) {
             if (drivetrain.getYaw() < targetAngle && drivetrain.getYaw() < oppositeAngle) {
-                angularVelocityPub.set(0.8);
+                angularVelocityPub.set(0.5);
             }
             else {
-                angularVelocityPub.set(-0.8);
+                angularVelocityPub.set(-0.5);
             }
         }
         else {
             if (drivetrain.getYaw() > targetAngle && drivetrain.getYaw() < oppositeAngle) {
-                angularVelocityPub.set(-0.8);
+                angularVelocityPub.set(-0.5);
             }
             else {
-                angularVelocityPub.set(0.8);
+                angularVelocityPub.set(0.5);
             }
         }
        }
