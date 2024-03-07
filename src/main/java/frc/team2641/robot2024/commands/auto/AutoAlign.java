@@ -54,7 +54,7 @@ public class AutoAlign extends Command {
         alignmentPub.set(true);
 
         if (targetAngle > 0) {
-            if (drivetrain.getYaw() < targetAngle && drivetrain.getYaw() < oppositeAngle) {
+            if (drivetrain.getHeading().getDegrees() < targetAngle && drivetrain.getHeading().getDegrees() < oppositeAngle) {
                 angularVelocityPub.set(0.5);
             }
             else {
@@ -62,7 +62,7 @@ public class AutoAlign extends Command {
             }
         }
         else {
-            if (drivetrain.getYaw() > targetAngle && drivetrain.getYaw() < oppositeAngle) {
+            if (drivetrain.getHeading().getDegrees() > targetAngle && drivetrain.getHeading().getDegrees() < oppositeAngle) {
                 angularVelocityPub.set(-0.5);
             }
             else {
@@ -85,6 +85,6 @@ public class AutoAlign extends Command {
     }
 
     public boolean isFinished() {
-        return (drivetrain.getYaw()<(targetAngle+1) && drivetrain.getYaw()>(targetAngle-1));
+        return (drivetrain.getHeading().getDegrees()<(targetAngle+1) && drivetrain.getHeading().getDegrees()>(targetAngle-1));
     }
 }
