@@ -17,7 +17,7 @@ public class AutoAlign extends Command {
     BooleanPublisher alignmentPub;
     DoublePublisher angularVelocityPub;
 
-    public AutoAlign(int element) {
+    public AutoAlign(int element, long stageAngle) {
         drivetrain = Drivetrain.getInstance();
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
@@ -39,8 +39,13 @@ public class AutoAlign extends Command {
             // speaker 
         }
         else if (element == 3) {
-            targetAngle = -150;
-            oppositeAngle = 30;
+            targetAngle = 0;
+            oppositeAngle = 180;
+            // stage
+        }
+        else if (element == 4) {
+            targetAngle = -120;
+            oppositeAngle = 60;
             // source
         }
 
