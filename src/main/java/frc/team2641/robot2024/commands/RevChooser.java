@@ -37,5 +37,9 @@ public class RevChooser extends ParallelCommandGroup {
       addCommands(new Rev(3));
       speedPub.set(3);
     }
+    else if (speed == 4) {
+      addCommands(new Rev(4));
+      speedPub.set(4);
+    }
   }
 }

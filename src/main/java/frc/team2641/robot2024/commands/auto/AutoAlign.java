@@ -39,8 +39,18 @@ public class AutoAlign extends Command {
             // speaker 
         }
         else if (element == 3) {
-            targetAngle = 0;
-            oppositeAngle = 180;
+            if (stageAngle == 1) {
+                targetAngle =-120;
+                oppositeAngle = 60;
+            }
+            else if (stageAngle == 2) {
+                targetAngle = 0;
+                oppositeAngle = 180;
+            }
+            else if (stageAngle == 3) {
+                targetAngle = 120;
+                oppositeAngle = -60;
+            }
             // stage
         }
         else if (element == 4) {
