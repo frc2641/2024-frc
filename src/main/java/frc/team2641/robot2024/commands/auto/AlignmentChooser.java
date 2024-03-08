@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class AlignmentChooser extends ParallelCommandGroup {
-
+    
     private IntegerSubscriber stageSub;
     
     public AlignmentChooser(int element) {
@@ -17,6 +17,8 @@ public class AlignmentChooser extends ParallelCommandGroup {
         else if (element == 4)
             addCommands(new AutoAlign(4, 0));
         else if (element == 3) {
+            NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+            stageSub = table.getIntegerTopic("stageAngle").subscribe(0);
             addCommands(new AutoAlign(4, stageSub.get()));
         }
     }

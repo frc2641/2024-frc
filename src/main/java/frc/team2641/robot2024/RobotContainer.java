@@ -10,6 +10,8 @@ import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.IntegerPublisher;
+import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -55,6 +57,9 @@ public class RobotContainer {
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
 
+  IntegerPublisher stagePub;
+  IntegerSubscriber stageSub;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -71,6 +76,10 @@ public class RobotContainer {
     angularVelocityPub = table.getDoubleTopic("angularVelocity").publish();
     angularVelocityPub.set(0);
     angularVelocitySub = table.getDoubleTopic("angularVelocity").subscribe(0);
+
+    stagePub = table.getIntegerTopic("stageAngle").publish();
+    stagePub.set(0);
+    stageSub = table.getIntegerTopic("stageAngle").subscribe(0);
 
     sniperPub = table.getBooleanTopic("sniperMode").publish();
     sniperPub.set(false);
@@ -122,11 +131,11 @@ public class RobotContainer {
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
     operatorGamepad.y().whileTrue(new Climb());
-    operatorGamepad.a().whileTrue(new Rev(1));
-    operatorGamepad.b().whileTrue(new Rev(2));
-    operatorGamepad.x().whileTrue(new Rev(3));
+    operatorGamepad.a().whileTrue(new RevChooser(1));
+    operatorGamepad.b().whileTrue(new RevChooser(2));
+    operatorGamepad.x().whileTrue(new RevChooser(3));
     operatorGamepad.leftTrigger().whileTrue(new Intake());
-    operatorGamepad.rightTrigger().whileTrue(new Feed());
+    operatorGamepad.rightTrigger().whileTrue(new FeedChooser());
   }
 
   /**
