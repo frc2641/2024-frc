@@ -121,16 +121,16 @@ public class RobotContainer {
    * Flight joysticks}.
    */
   private void configureBindings() {
-    driverGamepad.a().whileTrue(new AlignmentChooser(1));
-    driverGamepad.b().whileTrue(new AlignmentChooser(2));
-    driverGamepad.x().whileTrue(new AlignmentChooser(3));
-    driverGamepad.y().whileTrue(new AlignmentChooser(4));
+    driverGamepad.a().toggleOnTrue(new AlignmentChooser(1));
+    driverGamepad.b().toggleOnTrue(new AlignmentChooser(2));
+    driverGamepad.x().toggleOnTrue(new AlignmentChooser(3));
+    driverGamepad.y().toggleOnTrue(new AlignmentChooser(4));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
-    operatorGamepad.y().whileTrue(new Climb());
+    operatorGamepad.y().toggleOnTrue(new Climb());
     operatorGamepad.a().whileTrue(new RevChooser(1));
     operatorGamepad.b().whileTrue(new RevChooser(2));
     operatorGamepad.x().whileTrue(new RevChooser(3));
