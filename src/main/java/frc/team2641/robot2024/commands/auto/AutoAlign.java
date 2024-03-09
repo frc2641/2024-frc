@@ -40,22 +40,22 @@ public class AutoAlign extends Command {
         }
         else if (element == 3) {
             if (stageAngle == 1) {
-                targetAngle =-120;
-                oppositeAngle = 60;
+                targetAngle = 120;
+                oppositeAngle = -60;
             }
             else if (stageAngle == 2) {
                 targetAngle = 0;
                 oppositeAngle = 180;
             }
             else if (stageAngle == 3) {
-                targetAngle = 120;
-                oppositeAngle = -60;
+                targetAngle = -120;
+                oppositeAngle = 60;
             }
             // stage
         }
         else if (element == 4) {
-            targetAngle = -120;
-            oppositeAngle = 60;
+            targetAngle = 120;
+            oppositeAngle = -60;
             // source
         }
 
@@ -70,18 +70,18 @@ public class AutoAlign extends Command {
 
         if (targetAngle > 0) {
             if (drivetrain.getHeading().getDegrees() < targetAngle && drivetrain.getHeading().getDegrees() < oppositeAngle) {
-                angularVelocityPub.set(0.5);
+                angularVelocityPub.set(-0.5);
             }
             else {
-                angularVelocityPub.set(-0.5);
+                angularVelocityPub.set(0.5);
             }
         }
         else {
             if (drivetrain.getHeading().getDegrees() > targetAngle && drivetrain.getHeading().getDegrees() < oppositeAngle) {
-                angularVelocityPub.set(-0.5);
+                angularVelocityPub.set(0.5);
             }
             else {
-                angularVelocityPub.set(0.5);
+                angularVelocityPub.set(-0.5);
             }
         }
        }
