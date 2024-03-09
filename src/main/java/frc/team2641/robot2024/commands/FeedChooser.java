@@ -17,14 +17,13 @@ import frc.team2641.robot2024.subsystems.Drivetrain;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class FeedChooser extends ParallelCommandGroup {
   private Drivetrain drivetrain;
-  private IntegerSubscriber speedSub;
+  IntegerSubscriber speedSub;
 
   /** Creates a new ShootHigh. */
   public FeedChooser() {
     drivetrain = Drivetrain.getInstance();
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
-
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("shooterSpeed");
     speedSub = table.getIntegerTopic("shooterSpeed").subscribe(0);
 
     // Add your commands in the addCommands() call, e.g.
@@ -46,8 +45,5 @@ public class FeedChooser extends ParallelCommandGroup {
       addCommands(new Feed(3));
     else if (speedSub.get() == 4)
       addCommands(new Feed(4));
-    else {
-      addCommands();
-    }
   }
 }

@@ -24,7 +24,7 @@ public class AlignmentChooser extends ParallelCommandGroup {
                 stagePub.set(stageSub.get()+1);
             else
                 stagePub.set(1);
-            addCommands(new AutoAlign(3, stageSub.get()));
+            addCommands(new AutoAlign(3, (int) stageSub.get()));
         }
         else if (element == 4)
             addCommands(new AutoAlign(4, 0));

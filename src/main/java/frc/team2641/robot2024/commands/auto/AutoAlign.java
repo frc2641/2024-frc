@@ -17,7 +17,7 @@ public class AutoAlign extends Command {
     BooleanPublisher alignmentPub;
     DoublePublisher angularVelocityPub;
 
-    public AutoAlign(int element, long stageAngle) {
+    public AutoAlign(int element, int stageAngle) {
         drivetrain = Drivetrain.getInstance();
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
