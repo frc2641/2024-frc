@@ -90,11 +90,11 @@ public class RobotContainer {
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.5 : -driverGamepad.getLeftY(),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.6 : -driverGamepad.getLeftY(),
             OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.5 : -driverGamepad.getLeftX(),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.6 : -driverGamepad.getLeftX(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.5 : -driverGamepad.getRightX(),
+        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.6 : -driverGamepad.getRightX(),
         () -> robotSub.get());
 
     NamedCommands.registerCommand("shootHigh", new AutoShoot());
@@ -121,21 +121,21 @@ public class RobotContainer {
    * Flight joysticks}.
    */
   private void configureBindings() {
-    driverGamepad.a().whileTrue(new AlignmentChooser(1));
-    driverGamepad.b().whileTrue(new AlignmentChooser(2));
-    driverGamepad.x().whileTrue(new AlignmentChooser(3));
-    driverGamepad.y().whileTrue(new AlignmentChooser(4));
+    driverGamepad.a().whileTrue(new AutoAngle(1));
+    driverGamepad.b().whileTrue(new AutoAngle(2));
+    // driverGamepad.x().whileTrue(new AutoAngle(3));
+    driverGamepad.y().whileTrue(new AutoAngle(4));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
+    operatorGamepad.a().whileTrue(new Rev(1));
+    operatorGamepad.b().whileTrue(new Rev(2));
+    operatorGamepad.x().whileTrue(new Rev(3));
     operatorGamepad.y().whileTrue(new Climb());
-    operatorGamepad.a().whileTrue(new RevChooser(1));
-    operatorGamepad.b().whileTrue(new RevChooser(2));
-    operatorGamepad.x().whileTrue(new RevChooser(3));
     operatorGamepad.leftTrigger().whileTrue(new Intake());
-    operatorGamepad.rightTrigger().whileTrue(new FeedChooser());
+    operatorGamepad.rightTrigger().whileTrue(new Feed());
   }
 
   /**

@@ -3,31 +3,50 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.team2641.robot2024.commands;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.IntegerSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team2641.robot2024.subsystems.Drivetrain;
 import frc.team2641.robot2024.subsystems.Indexer;
 
 public class Feed extends Command {
   private Indexer indexer;
-  private int speed;
+  private Drivetrain drivetrain;
+  IntegerSubscriber speedSub;
 
   /** Creates a new Flywheel. */
-  public Feed(int speed) {
+  public Feed() {
+    drivetrain = Drivetrain.getInstance();
     indexer = Indexer.getInstance();
-    this.speed = speed;
-    addRequirements(indexer);
+    addRequirements(indexer, drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (speed == 1)
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+    speedSub = table.getIntegerTopic("shooterSpeed").subscribe(0);
+    
+    if (speedSub.get() == 1) {
       indexer.amp();
-    else if (speed == 2)
+      Timer.delay(0.5);
+      drivetrain.drive(new Translation2d(50, 0), 0, false);
+      Timer.delay(0.5);
+      drivetrain.drive(new Translation2d(-50, 0), 0, false);
+      Timer.delay(0.5);
+      drivetrain.drive(new Translation2d(0, 0), 0, false);
+    }
+    else if (speedSub.get() == 2)
       indexer.speaker();
-    else if (speed == 3)
+    else if (speedSub.get() == 3)
       indexer.trap();
-    else if (speed == 4)
+    else if (speedSub.get() == 4)
       indexer.intake();
+    else
+      indexer.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -15,7 +15,7 @@ public class Intake extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new RevChooser(4),
-        new FeedChooser());
+        new Rev(4),
+        new Feed());
   }
 }

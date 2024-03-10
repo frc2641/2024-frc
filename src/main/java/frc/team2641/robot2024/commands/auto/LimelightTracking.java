@@ -3,6 +3,7 @@ package frc.team2641.robot2024.commands.auto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2024.Limelight;
 import frc.team2641.robot2024.subsystems.Drivetrain;
@@ -12,22 +13,22 @@ public class LimelightTracking extends Command {
 
   private final PIDController controllerX;
   // private final PIDController controllerY;
-  // private final PIDController controllerAngle;
+  private final PIDController controllerAngle;
 
   public LimelightTracking() {
     this.swerveSubsystem = Drivetrain.getInstance();
 
-    controllerX = new PIDController(0.1, 0.0, 0.0);
-    controllerX.setTolerance(0.25);
+    controllerX = new PIDController(3, 0.001, 0);
+    controllerX.setTolerance(0.05);
     controllerX.setSetpoint(0.0);
 
     // controllerY = new PIDController(1.0, 0.0, 0.0);
     // controllerY.setTolerance(0.25);
     // controllerY.setSetpoint(0.0);
 
-    // controllerAngle = new PIDController(1.0, 0.0, 0.0);
-    // controllerAngle.setTolerance(0.25);
-    // controllerAngle.setSetpoint(0.0);
+    controllerAngle = new PIDController(2.5, 0.0, 0);
+    controllerAngle.setTolerance(0.05);
+    controllerAngle.setSetpoint(0.0);
 
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
@@ -49,19 +50,19 @@ public class LimelightTracking extends Command {
    */
   @Override
   public void execute() {
-    double tx = Limelight.getTX("");
-    // double ty = Limelight.getTY("");
-    // double tangle = Limelight.getBotPose3d_TargetSpace("").getRotation().getZ();
+    double tx = Limelight.getBotPose3d_TargetSpace("").getX();
+    // double ty = Limelight.getBotPose3d_TargetSpace("").getY();
+    double tangle = Limelight.getBotPose3d_TargetSpace("").getRotation().getY();
 
-    // double translationY = MathUtil.clamp(controllerY.calculate(ty, 0.0), -0.5,
-    // 0.5);
-    // double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -0.5,
-    // 0.5);
-    // double rotation = MathUtil.clamp(controllerAngle.calculate(tangle, 0.0),
-    // -0.5, 0.5);
-    double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -0.65, 0.65);
+    // double translationY = MathUtil.clamp(controllerY.calculate(ty, 0.0), -0.5, 0.5);
+    double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -1, 1);
+    double rotation = MathUtil.clamp(controllerAngle.calculate(tangle, 0.0), -1, 1);
 
-    swerveSubsystem.drive(new Translation2d(0, 0), translationX, false);
+    swerveSubsystem.drive(new Translation2d(0, translationX), -rotation, false);
+    // swerveSubsystem.drive(new Translation2d(0, -translationY), rotation, false);
+    // System.out.println("ty: " + ty + " tangle: " + tangle);
+    SmartDashboard.putNumber("translationX", translationX);
+    SmartDashboard.putNumber("rotation", rotation);
   }
 
   /**
@@ -84,7 +85,8 @@ public class LimelightTracking extends Command {
    */
   @Override
   public boolean isFinished() {
-    return controllerX.atSetpoint();
+    return Limelight.getFiducialID("") != -1 && controllerX.atSetpoint() && controllerAngle.atSetpoint();
+    // return false;
   }
 
   /**

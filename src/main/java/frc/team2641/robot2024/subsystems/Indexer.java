@@ -24,11 +24,11 @@ public class Indexer extends SubsystemBase {
   public void speaker() {
     indexerMotor.set(Constants.MotorSpeeds.speakerSpeed);
   }
-
+  
   public void amp() {
     indexerMotor.set(Constants.MotorSpeeds.ampSpeed);
   }
-
+  
   public void intake() {
     indexerMotor.set(-Constants.MotorSpeeds.intakeSpeed);
   }

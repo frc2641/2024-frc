@@ -55,8 +55,8 @@ public final class Constants {
 
   public static final class MotorSpeeds {
     public static final double speakerSpeed = 1;
-    public static final double ampSpeed = 0.15;
-    public static final double trapSpeed = 0.8;
+    public static final double ampSpeed = 0.1;
+    public static final double trapSpeed = 0.5;
     public static final double intakeSpeed = 0.1;
   }
 }
