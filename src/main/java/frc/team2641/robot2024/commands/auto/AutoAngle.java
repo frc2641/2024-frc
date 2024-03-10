@@ -64,7 +64,7 @@ public class AutoAngle extends Command {
             }
             else if (stageSub.get() == 2) {
                 targetAngle = 0;
-                oppositeAngle = 180;
+                oppositeAngle = -180;
             }
             else if (stageSub.get() == 3) {
                 targetAngle = 120;
@@ -78,9 +78,11 @@ public class AutoAngle extends Command {
             // source
         }
 
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+            if (element != 3) {
             targetAngle *= -1;
             oppositeAngle *= -1;
+            }
         }
     }
     
@@ -92,13 +94,13 @@ public class AutoAngle extends Command {
     public void execute() {
         if (targetAngle < 0) {
             if (drivetrain.getHeading().getDegrees() > targetAngle && drivetrain.getHeading().getDegrees() < oppositeAngle) {
-                if (Math.abs(Math.abs(targetAngle) - Math.abs(drivetrain.getHeading().getDegrees())) < 20)
+                if (drivetrain.getHeading().getDegrees() < targetAngle+20 && drivetrain.getHeading().getDegrees() > 0)
                     angularVelocityPub.set(-0.4);
                 else
                     angularVelocityPub.set(-0.65);
             }
             else {
-                if (Math.abs(Math.abs(targetAngle) - Math.abs(drivetrain.getHeading().getDegrees())) < 20)
+                if (drivetrain.getHeading().getDegrees() > targetAngle-20 && drivetrain.getHeading().getDegrees() < 0)
                     angularVelocityPub.set(0.4);
                 else
                     angularVelocityPub.set(0.65);
@@ -106,18 +108,19 @@ public class AutoAngle extends Command {
         }
         else {
             if (drivetrain.getHeading().getDegrees() < targetAngle && drivetrain.getHeading().getDegrees() > oppositeAngle) {
-                if (Math.abs(Math.abs(targetAngle) - Math.abs(drivetrain.getHeading().getDegrees())) < 20)
+                if (drivetrain.getHeading().getDegrees() > targetAngle-20 && drivetrain.getHeading().getDegrees() < 0)
                     angularVelocityPub.set(0.4);
                 else
                     angularVelocityPub.set(0.65);
             }
             else {
-                if (Math.abs(Math.abs(targetAngle) - Math.abs(drivetrain.getHeading().getDegrees())) < 20)
+                if (drivetrain.getHeading().getDegrees() < targetAngle+20 && drivetrain.getHeading().getDegrees() > 0)
                     angularVelocityPub.set(-0.4);
                 else
                     angularVelocityPub.set(-0.65);
             }
         }
+        System.out.println("angle: " + drivetrain.getHeading().getDegrees());
     }
 
     public void end(boolean interrupted) {

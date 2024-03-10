@@ -123,7 +123,7 @@ public class RobotContainer {
   private void configureBindings() {
     driverGamepad.a().whileTrue(new AutoAngle(1));
     driverGamepad.b().whileTrue(new AutoAngle(2));
-    // driverGamepad.x().whileTrue(new AutoAngle(3));
+    driverGamepad.x().whileTrue(new AutoAngle(3));
     driverGamepad.y().whileTrue(new AutoAngle(4));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());

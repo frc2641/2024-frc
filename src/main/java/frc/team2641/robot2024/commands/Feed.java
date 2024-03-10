@@ -21,7 +21,7 @@ public class Feed extends Command {
   public Feed() {
     drivetrain = Drivetrain.getInstance();
     indexer = Indexer.getInstance();
-    addRequirements(indexer, drivetrain);
+    addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +29,7 @@ public class Feed extends Command {
   public void initialize() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     speedSub = table.getIntegerTopic("shooterSpeed").subscribe(0);
-    
+
     if (speedSub.get() == 1) {
       indexer.amp();
       Timer.delay(0.5);
@@ -38,8 +38,7 @@ public class Feed extends Command {
       drivetrain.drive(new Translation2d(-50, 0), 0, false);
       Timer.delay(0.5);
       drivetrain.drive(new Translation2d(0, 0), 0, false);
-    }
-    else if (speedSub.get() == 2)
+    } else if (speedSub.get() == 2)
       indexer.speaker();
     else if (speedSub.get() == 3)
       indexer.trap();
@@ -50,7 +49,8 @@ public class Feed extends Command {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  public void execute() {}
+  public void execute() {
+  }
 
   @Override
   public void end(boolean interrupted) {
