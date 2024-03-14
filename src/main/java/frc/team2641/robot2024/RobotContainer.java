@@ -99,7 +99,8 @@ public class RobotContainer {
         () -> robotSub.get());
 
     NamedCommands.registerCommand("autoShoot", new AutoShoot());
-    NamedCommands.registerCommand("creep", new Creep());
+    NamedCommands.registerCommand("creep", new Creep(false));
+    NamedCommands.registerCommand("creepAngle", new Creep(true));
     NamedCommands.registerCommand("angleSource", new AutoAngle(4));
 
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");

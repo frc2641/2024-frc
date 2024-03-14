@@ -79,9 +79,15 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "creepAngle"
+                }
+              },
+              {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
                 }
               }
             ]

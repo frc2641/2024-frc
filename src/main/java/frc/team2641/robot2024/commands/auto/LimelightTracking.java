@@ -19,7 +19,7 @@ public class LimelightTracking extends Command {
     this.swerveSubsystem = Drivetrain.getInstance();
 
     controllerX = new PIDController(3, 0.001, 0);
-    controllerX.setTolerance(0.05);
+    controllerX.setTolerance(0.025);
     controllerX.setSetpoint(0.0);
 
     // controllerY = new PIDController(1.0, 0.0, 0.0);
