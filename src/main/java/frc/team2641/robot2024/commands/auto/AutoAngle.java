@@ -120,7 +120,6 @@ public class AutoAngle extends Command {
                     angularVelocityPub.set(-0.65);
             }
         }
-        System.out.println("angle: " + drivetrain.getHeading().getDegrees());
     }
 
     public void end(boolean interrupted) {

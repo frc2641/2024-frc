@@ -4,6 +4,7 @@
 
 package frc.team2641.robot2024;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.BooleanPublisher;
@@ -97,11 +98,19 @@ public class RobotContainer {
         () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.6 : -driverGamepad.getRightX(),
         () -> robotSub.get());
 
-    NamedCommands.registerCommand("shootHigh", new AutoShoot());
-    NamedCommands.registerCommand("creep", new Creep());
+    NamedCommands.registerCommand("autoShoot", new AutoShoot());
+    NamedCommands.registerCommand("creepTop", new Creep(1));
+    NamedCommands.registerCommand("creepCenter", new Creep(2));
+    NamedCommands.registerCommand("creepBottom", new Creep(3));
+    NamedCommands.registerCommand("angleSource", new AutoAngle(4));
 
-    autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
-    autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
+    autoChooser.setDefaultOption("Shoot Stationary", "Shoot Stationary");
+    autoChooser.addOption("Shoot Creep Top", "Shoot Creep Top");
+    autoChooser.addOption("Shoot Creep Center", "Shoot Creep Center");
+    autoChooser.addOption("Shoot Creep Bottom", "Shoot Creep Bottom");
+    autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
+    autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
+    autoChooser.addOption("Shoot Bottom Jackass", "Shoot Bottom Jackass");
     SmartDashboard.putData("Auto", autoChooser);
 
     drivetrain.setDefaultCommand(driveCommand);
