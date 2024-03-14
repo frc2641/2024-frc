@@ -99,15 +99,12 @@ public class RobotContainer {
         () -> robotSub.get());
 
     NamedCommands.registerCommand("autoShoot", new AutoShoot());
-    NamedCommands.registerCommand("creepTop", new Creep(1));
-    NamedCommands.registerCommand("creepCenter", new Creep(2));
-    NamedCommands.registerCommand("creepBottom", new Creep(3));
+    NamedCommands.registerCommand("creep", new Creep());
     NamedCommands.registerCommand("angleSource", new AutoAngle(4));
 
-    autoChooser.setDefaultOption("Shoot Stationary", "Shoot Stationary");
-    autoChooser.addOption("Shoot Creep Top", "Shoot Creep Top");
-    autoChooser.addOption("Shoot Creep Center", "Shoot Creep Center");
-    autoChooser.addOption("Shoot Creep Bottom", "Shoot Creep Bottom");
+    autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
+    autoChooser.addOption("Shoot Creep Angle", "Shoot Creep Angle");
+    autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
     autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
     autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
     autoChooser.addOption("Shoot Bottom Jackass", "Shoot Bottom Jackass");

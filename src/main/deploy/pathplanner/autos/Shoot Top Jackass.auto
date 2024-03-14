@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4106867853375344,
-      "y": 5.556066607628711
+      "x": 1.25,
+      "y": 6.35
     },
-    "rotation": 0
+    "rotation": 45.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootHigh"
+                  "name": "autoShoot"
                 }
               },
               {
@@ -28,6 +28,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top Jackass"
           }
         }
       ]

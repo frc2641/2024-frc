@@ -22,7 +22,7 @@ public class AutoShoot extends Command {
   public void initialize() {
     timer.reset();
     shooter.speaker();
-    Timer.delay(2);
+    Timer.delay(2.5);
     indexer.speaker();
   }
 

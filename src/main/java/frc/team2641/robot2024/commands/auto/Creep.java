@@ -13,13 +13,11 @@ import frc.team2641.robot2024.subsystems.Drivetrain;
 
 public class Creep extends Command {
   private Drivetrain drivetrain;
-  private int position;
   DoubleSubscriber angularVelocitySub;
 
   /** Creates a new Creep. */
-  public Creep(int position) {
+  public Creep() {
     drivetrain = Drivetrain.getInstance();
-    this.position = position;
     
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
 
@@ -37,12 +35,7 @@ public class Creep extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (position == 1)
-      drivetrain.drive(new Translation2d(0.7, 0.6), angularVelocitySub.get(), true);
-    else if (position == 2)
-      drivetrain.drive(new Translation2d(0.7, -0.525), angularVelocitySub.get(), true);
-    else if (position == 3)
-      drivetrain.drive(new Translation2d(0.7, -0.6), angularVelocitySub.get(), true);
+    drivetrain.drive(new Translation2d(0.8, 0), 0, false);
   }
 
   // Called once the command ends or is interrupted.
