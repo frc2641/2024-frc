@@ -99,16 +99,18 @@ public class RobotContainer {
         () -> robotSub.get());
 
     NamedCommands.registerCommand("autoShoot", new AutoShoot());
-    NamedCommands.registerCommand("creep", new Creep(false));
-    NamedCommands.registerCommand("creepAngle", new Creep(true));
-    NamedCommands.registerCommand("angleSource", new AutoAngle(4));
+    NamedCommands.registerCommand("creep", new Creep(0, false));
+    NamedCommands.registerCommand("creepAmp", new Creep(1, false));
+    NamedCommands.registerCommand("creepAngle", new Creep(0, true));
+    NamedCommands.registerCommand("creepAngleAmp", new Creep(1, true));
 
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
-    autoChooser.addOption("Shoot Creep Angle", "Shoot Creep Angle");
+    autoChooser.addOption("Shoot Creep Amp", "Shoot Creep Amp");
+    // autoChooser.addOption("Shoot Creep Angle", "Shoot Creep Angle");
     autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
-    autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
-    autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
-    autoChooser.addOption("Shoot Bottom Jackass", "Shoot Bottom Jackass");
+    // autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
+    // autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
+    // autoChooser.addOption("Shoot Bottom Jackass", "Shoot Bottom Jackass");
     SmartDashboard.putData("Auto", autoChooser);
 
     drivetrain.setDefaultCommand(driveCommand);

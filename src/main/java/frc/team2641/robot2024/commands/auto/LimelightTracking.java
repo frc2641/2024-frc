@@ -18,7 +18,7 @@ public class LimelightTracking extends Command {
   public LimelightTracking() {
     this.swerveSubsystem = Drivetrain.getInstance();
 
-    controllerX = new PIDController(3, 0.001, 0);
+    controllerX = new PIDController(3, 1, 0);
     controllerX.setTolerance(0.025);
     controllerX.setSetpoint(0.0);
 
@@ -26,8 +26,8 @@ public class LimelightTracking extends Command {
     // controllerY.setTolerance(0.25);
     // controllerY.setSetpoint(0.0);
 
-    controllerAngle = new PIDController(2.5, 0.0, 0);
-    controllerAngle.setTolerance(0.05);
+    controllerAngle = new PIDController(2.9, 0, 0);
+    controllerAngle.setTolerance(0.01);
     controllerAngle.setSetpoint(0.0);
 
     // each subsystem used by the command must be passed into the
