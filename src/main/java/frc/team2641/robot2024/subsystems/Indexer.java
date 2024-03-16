@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2024.Constants;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Indexer extends SubsystemBase {
   private static Indexer instance;
@@ -19,6 +20,7 @@ public class Indexer extends SubsystemBase {
   public Indexer() {
     indexerMotor = new TalonFX(Constants.CAN.indexerMotor);
     indexerMotor.clearStickyFaults();
+    indexerMotor.setNeutralMode(NeutralModeValue.Coast);
   }
 
   public void speaker() {

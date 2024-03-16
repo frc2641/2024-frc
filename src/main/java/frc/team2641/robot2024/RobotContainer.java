@@ -4,7 +4,6 @@
 
 package frc.team2641.robot2024;
 
-import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.BooleanPublisher;

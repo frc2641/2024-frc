@@ -3,7 +3,9 @@ package frc.team2641.robot2024.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2024.Constants;
 
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Shooter extends SubsystemBase {
   private static Shooter instance;
@@ -19,6 +21,8 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     shooterMotor = new TalonFX(Constants.CAN.shooterMotor);
     shooterMotor.clearStickyFaults();
+    shooterMotor.setNeutralMode(NeutralModeValue.Coast);
+    shooterMotor.getConfigurator().apply(new OpenLoopRampsConfigs().withVoltageOpenLoopRampPeriod(0.25));
   }
 
   public void speaker() {

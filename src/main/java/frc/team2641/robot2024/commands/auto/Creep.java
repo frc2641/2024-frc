@@ -41,15 +41,15 @@ public class Creep extends Command {
     if (!isAngular) {
       if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
         if (position == 1)
-          drivetrain.drive(new Translation2d(0.8, 0), -0.1, false);
+          drivetrain.drive(new Translation2d(1.1, 0), -0.4, false);
         else
-          drivetrain.drive(new Translation2d(0.8, 0), 0, false);
+          drivetrain.drive(new Translation2d(1.1, 0), 0, false);
       }
       else {
         if (position == 1)
-          drivetrain.drive(new Translation2d(0.8, 0), 0.1, false);
+          drivetrain.drive(new Translation2d(1.1, 0), 0.4, false);
         else
-          drivetrain.drive(new Translation2d(0.8, 0), 0, false);
+          drivetrain.drive(new Translation2d(1.1, 0), 0, false);
       }
     }
     else {
