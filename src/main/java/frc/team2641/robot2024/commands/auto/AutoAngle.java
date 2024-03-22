@@ -1,6 +1,7 @@
 
 package frc.team2641.robot2024.commands.auto;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.IntegerPublisher;
@@ -17,14 +18,16 @@ public class AutoAngle extends Command {
     private int targetAngle;
     private int oppositeAngle;
     private int element;
+    private boolean isAutonomous;
     BooleanPublisher alignmentPub;
     DoublePublisher angularVelocityPub;
     IntegerPublisher stagePub;
     IntegerSubscriber stageSub;
 
-    public AutoAngle(int element) {
+    public AutoAngle(int element, boolean isAutonomous) {
         drivetrain = Drivetrain.getInstance();
         this.element = element;
+        this.isAutonomous = isAutonomous;
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
 
@@ -95,36 +98,64 @@ public class AutoAngle extends Command {
         if (targetAngle < 0) {
             if (drivetrain.getHeading().getDegrees() > targetAngle && drivetrain.getHeading().getDegrees() < oppositeAngle) {
                 if (drivetrain.getHeading().getDegrees() < targetAngle+20 && drivetrain.getHeading().getDegrees() > 0)
-                    angularVelocityPub.set(-0.4);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(-0.4);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), -0.4, true);
                 else
-                    angularVelocityPub.set(-0.65);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(-0.65);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), -0.65, true);
             }
             else {
                 if (drivetrain.getHeading().getDegrees() > targetAngle-20 && drivetrain.getHeading().getDegrees() < 0)
-                    angularVelocityPub.set(0.4);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(0.4);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), 0.4, true);
                 else
-                    angularVelocityPub.set(0.65);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(0.65);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), 0.65, true);
             }
         }
         else {
             if (drivetrain.getHeading().getDegrees() < targetAngle && drivetrain.getHeading().getDegrees() > oppositeAngle) {
                 if (drivetrain.getHeading().getDegrees() > targetAngle-20 && drivetrain.getHeading().getDegrees() < 0)
-                    angularVelocityPub.set(0.4);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(0.4);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), 0.4, true);
                 else
-                    angularVelocityPub.set(0.65);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(0.65);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), 0.65, true);
             }
             else {
                 if (drivetrain.getHeading().getDegrees() < targetAngle+20 && drivetrain.getHeading().getDegrees() > 0)
-                    angularVelocityPub.set(-0.4);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(-0.4);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), -0.4, true);
                 else
-                    angularVelocityPub.set(-0.65);
+                    if (!isAutonomous)
+                        angularVelocityPub.set(-0.65);
+                    else
+                        drivetrain.drive(new Translation2d(0, 0), -0.65, true);
             }
         }
     }
 
     public void end(boolean interrupted) {
-        alignmentPub.set(false);
-        angularVelocityPub.set(0);
+        if (isAutonomous)
+            drivetrain.drive(new Translation2d(0, 0), 0, true);
+        else {
+            alignmentPub.set(false);
+            angularVelocityPub.set(0);
+        }
     }
 
     public boolean isFinished() {

@@ -98,14 +98,12 @@ public class RobotContainer {
         () -> robotSub.get());
 
     NamedCommands.registerCommand("autoShoot", new AutoShoot());
-    NamedCommands.registerCommand("creep", new Creep(0, false));
-    NamedCommands.registerCommand("creepAmp", new Creep(1, false));
-    NamedCommands.registerCommand("creepAngle", new Creep(0, true));
-    NamedCommands.registerCommand("creepAngleAmp", new Creep(1, true));
+    NamedCommands.registerCommand("creep", new Creep(0));
+    NamedCommands.registerCommand("creepAmp", new Creep(1));
+    NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
 
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
     autoChooser.addOption("Shoot Creep Amp", "Shoot Creep Amp");
-    // autoChooser.addOption("Shoot Creep Angle", "Shoot Creep Angle");
     autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
     // autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
     // autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
@@ -129,10 +127,10 @@ public class RobotContainer {
    * Flight joysticks}.
    */
   private void configureBindings() {
-    driverGamepad.a().whileTrue(new AutoAngle(1));
-    driverGamepad.b().whileTrue(new AutoAngle(2));
-    driverGamepad.x().whileTrue(new AutoAngle(3));
-    driverGamepad.y().whileTrue(new AutoAngle(4));
+    driverGamepad.a().whileTrue(new AutoAngle(1, false));
+    driverGamepad.b().whileTrue(new AutoAngle(2, false));
+    driverGamepad.x().whileTrue(new AutoAngle(3, false));
+    driverGamepad.y().whileTrue(new AutoAngle(4, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());

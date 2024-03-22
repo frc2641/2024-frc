@@ -11,16 +11,12 @@ import frc.team2641.robot2024.subsystems.Drivetrain;
 
 public class Creep extends Command {
   private Drivetrain drivetrain;
-  private boolean isAngular;
   private int position;
-  private int targetAngle;
 
   /** Creates a new Creep. */
-  public Creep(int position, boolean isAngular) {
+  public Creep(int position) {
     drivetrain = Drivetrain.getInstance();
-    this.isAngular = isAngular;
     this.position = position;
-    this.targetAngle = targetAngle;
     
     addRequirements(drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,34 +25,22 @@ public class Creep extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
-      targetAngle = 120;
-    else
-      targetAngle = -120;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!isAngular) {
-      if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
-        if (position == 1)
-          drivetrain.drive(new Translation2d(1.1, 0), -0.4, false);
-        else
-          drivetrain.drive(new Translation2d(1.1, 0), 0, false);
-      }
-      else {
-        if (position == 1)
-          drivetrain.drive(new Translation2d(1.1, 0), 0.4, false);
-        else
-          drivetrain.drive(new Translation2d(1.1, 0), 0, false);
-      }
+    if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
+      if (position == 1)
+        drivetrain.drive(new Translation2d(1.1, 0), -0.4, false);
+      else
+        drivetrain.drive(new Translation2d(1.1, 0), 0, false);
     }
     else {
-      if (drivetrain.getHeading().getDegrees() < targetAngle+2 && drivetrain.getHeading().getDegrees() > targetAngle-2)
-        drivetrain.drive(new Translation2d(0, 0), 0, false);
+      if (position == 1)
+        drivetrain.drive(new Translation2d(1.1, 0), 0.4, false);
       else
-        drivetrain.drive(new Translation2d(0, 0), 0.5, false);
+        drivetrain.drive(new Translation2d(1.1, 0), 0, false);
     }
   }
 
