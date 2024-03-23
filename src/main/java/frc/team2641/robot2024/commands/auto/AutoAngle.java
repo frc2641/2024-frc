@@ -83,8 +83,8 @@ public class AutoAngle extends Command {
 
         if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
             if (element != 3) {
-            targetAngle *= -1;
-            oppositeAngle *= -1;
+                targetAngle *= -1;
+                oppositeAngle *= -1;
             }
         }
     }
@@ -158,12 +158,11 @@ public class AutoAngle extends Command {
     }
 
     public void end(boolean interrupted) {
+        alignmentPub.set(false);
         if (isAutonomous)
             drivetrain.drive(new Translation2d(0, 0), 0, false);
-        else {
-            alignmentPub.set(false);
+        else
             angularVelocityPub.set(0);
-        }
     }
 
     public boolean isFinished() {
