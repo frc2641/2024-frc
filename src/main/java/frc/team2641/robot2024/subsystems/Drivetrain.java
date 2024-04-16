@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.team2641.robot2024.Constants.AutoConstants;
 import frc.team2641.robot2024.Constants.DriveConstants;
@@ -231,9 +232,38 @@ public class Drivetrain extends SubsystemBase {
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX,
       BooleanSupplier robotRelative) {
+    CommandXboxController driverGamepad = new CommandXboxController(0);
+    double magnitude = Math.pow(Math.sqrt(Math.pow(translationX.getAsDouble(), 2)+Math.pow(translationY.getAsDouble(), 2)), 3);
+    if (translationX.getAsDouble() > 0 && translationY.getAsDouble() < 0) {
+      return run(() -> {
+        swerveDrive.drive(new Translation2d(Math.pow(magnitude, 3) * Math.cos(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity(),
+            Math.pow(-magnitude, 3) * Math.sin(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity()),
+            Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
+            !robotRelative.getAsBoolean(),
+            false);
+      });
+    }
+    else if (translationX.getAsDouble() < 0 && translationY.getAsDouble() > 0) {
+      return run(() -> {
+        swerveDrive.drive(new Translation2d(Math.pow(-magnitude, 3) * Math.cos(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity(),
+            Math.pow(magnitude, 3) * Math.sin(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity()),
+            Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
+            !robotRelative.getAsBoolean(),
+            false);
+      });
+    }
+    else if (translationX.getAsDouble() < 0 && translationY.getAsDouble() < 0) {
+      return run(() -> {
+        swerveDrive.drive(new Translation2d(Math.pow(-magnitude, 3) * Math.cos(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity(),
+            Math.pow(-magnitude, 3) * Math.sin(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity()),
+            Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
+            !robotRelative.getAsBoolean(),
+            false);
+      });
+    }
     return run(() -> {
-      swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
-          Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
+      swerveDrive.drive(new Translation2d(Math.pow(magnitude, 3) * Math.cos(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity(),
+          Math.pow(magnitude, 3) * Math.sin(Math.atan(driverGamepad.getLeftY()/driverGamepad.getLeftX())) * swerveDrive.getMaximumVelocity()),
           Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
           !robotRelative.getAsBoolean(),
           false);
