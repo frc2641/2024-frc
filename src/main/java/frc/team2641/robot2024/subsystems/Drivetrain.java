@@ -227,23 +227,13 @@ public class Drivetrain extends SubsystemBase {
    *                         controls.
    * @param angularRotationX Angular velocity of the robot to set. Cubed for
    *                         smoother controls.
-   * @param robotRelative    Orient motion vectors of the robot relative to the
-   *                         front of the chassis.
    * @return Drive command.
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX,
       BooleanSupplier robotRelative) {
-    double magnitude = Math.sqrt(Math.pow(translationX.getAsDouble(), 2) + Math.pow(translationY.getAsDouble(), 2));
-    double xComp = 
-      translationX.getAsDouble() < 0 ? -Math.pow(magnitude, 3) * Math.cos(Math.atan(Math.abs(translationY.getAsDouble()/translationX.getAsDouble()))) :
-      translationX.getAsDouble() > 0 ? Math.pow(magnitude, 3) * Math.cos(Math.atan(Math.abs(translationY.getAsDouble()/translationX.getAsDouble()))) :
-      0.0;
-    double yComp = 
-      translationY.getAsDouble() < 0 ? -Math.pow(magnitude, 3) * Math.sin(Math.atan(Math.abs(translationY.getAsDouble()/translationX.getAsDouble()))) :
-      translationY.getAsDouble() > 0 ? Math.pow(magnitude, 3) * Math.sin(Math.atan(Math.abs(translationY.getAsDouble()/translationX.getAsDouble()))) :
-      0.0;
     return run(() -> {
-      swerveDrive.drive(new Translation2d(xComp * swerveDrive.getMaximumVelocity(), yComp * swerveDrive.getMaximumVelocity()),
+      swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
+          Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
           Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
           !robotRelative.getAsBoolean(),
           false);
