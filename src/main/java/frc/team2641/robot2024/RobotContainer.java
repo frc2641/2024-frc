@@ -88,7 +88,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
     autoChooser.addOption("Shoot Creep Amp", "Shoot Creep Amp");
     autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
-    autoChooser.addOption("Test Auto 1", "Test Auto 1");
+    autoChooser.addOption("New Auto", "New Auto");
     // autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
     // autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
     // autoChooser.addOption("Shoot Bottom Jackass", "Shoot Bottom Jackass");
