@@ -20,7 +20,7 @@ public class Pneumatics extends SubsystemBase {
   }
 
   public void enable() {
-    compressor.enableAnalog(80, 100);
+    // compressor.enableAnalog(80, 100);
   }
 
   public void disable() {

@@ -24,6 +24,9 @@ public class AutoShoot extends Command {
     shooter.speaker();
     Timer.delay(2.5);
     indexer.speaker();
+    Timer.delay(2);
+    shooter.stop();
+    indexer.stop();
   }
 
   @Override
@@ -39,6 +42,6 @@ public class AutoShoot extends Command {
 
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(3);
+    return timer.hasElapsed(5);
   }
 }
