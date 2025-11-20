@@ -109,16 +109,16 @@ public class RobotContainer {
 
     operatorGamepad.a().whileTrue(new Rev(1));
     operatorGamepad.b().whileTrue(new Rev(2));
-    operatorGamepad.x().whileTrue(new Rev(3));
+    // operatorGamepad.x().whileTrue(new Rev(3));
     operatorGamepad.y().whileTrue(new Climb());
     operatorGamepad.leftTrigger().whileTrue(new Intake());
     operatorGamepad.rightTrigger().whileTrue(new Feed());
+    operatorGamepad.x().onTrue(new Climb());
   }
 
   public Command getAutonomousCommand() {
     return drivetrain.getAutonomousCommand(autoChooser.getSelected());
   }
-
   public void setMotorBrake(boolean brake) {
     drivetrain.setMotorBrake(brake);
   }
